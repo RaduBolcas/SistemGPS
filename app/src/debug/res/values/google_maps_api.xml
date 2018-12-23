@@ -1,0 +1,17 @@
+<resources>
+    <!--
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=F3:9F:CE:93:D4:16:63:13:F8:57:B7:81:19:6C:68:4F:31:FF:F4:8A%3Bcom.example.radu.sistemgps
+
+    You can also add your credentials to an existing key, using this line:
+    F3:9F:CE:93:D4:16:63:13:F8:57:B7:81:19:6C:68:4F:31:FF:F4:8A;com.example.radu.sistemgps
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDtzyQFCR3q_DQqAS-W-eA5KnnTE6D7Itw</string>
+</resources>

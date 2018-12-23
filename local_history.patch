@@ -1,0 +1,16 @@
+Index: app/src/main/java/com/example/radu/sistemgps/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/radu/sistemgps/MainActivity.java	(revision )
++++ app/src/main/java/com/example/radu/sistemgps/MainActivity.java	(revision )
+@@ -112,7 +112,7 @@
+             public void run() {
+ 
+                 MyLocationListener.updateMyPos(loc1);
+-                GetPos.updateHisPos(loc2);
++                bearing=GetPos.updateHisPos(loc2);
+ 
+                 try {
+                     Thread.sleep(5000);

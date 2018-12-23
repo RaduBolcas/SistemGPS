@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_insert_coord"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.radu.sistemgps.InsertCoord">
+
+    <EditText
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:id = "@+id/editTextY"
+        android:hint = "Enter Long (+forE/-forW)"
+        android:focusable = "true"
+        android:textColorHighlight = "#cb7c114c"
+        android:textColorHint = "#78b7ac"
+        android:inputType="numberDecimal|numberSigned"
+        android:layout_marginTop = "46dp"
+        android:layout_alignParentLeft = "true"
+        android:layout_alignParentStart = "true"
+        android:layout_alignParentRight = "true"
+        android:layout_alignParentEnd = "true" />
+
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal|numberSigned"
+        android:ems="10"
+        android:id="@+id/editTextX"
+        android:hint="Enter Lat (+forN/-forS)"
+        android:layout_below="@+id/editText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight = "true"
+        android:layout_alignParentStart="true"
+        android:textColorHint="#78b7ac"
+         />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FindLocation"
+        android:id="@+id/button1"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/editTextY"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>
