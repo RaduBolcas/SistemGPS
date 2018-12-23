@@ -28,7 +28,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements SensorEventListener {
 
     public static TextView t, t1, t2, t3, t4, t5, t6;
-
+//ceva de scris
     private ImageView mPointer;
     private ImageView mPointer2;
     private SensorManager mSensorManager;
