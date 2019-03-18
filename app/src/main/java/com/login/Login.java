@@ -1,4 +1,4 @@
-package com.example.radu.sistemgps;
+package com.login;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,9 +14,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.radu.sistemgps.InternetConnection;
+import com.example.radu.sistemgps.MainActivity;
+import com.example.radu.sistemgps.Meniu;
+import com.example.radu.sistemgps.R;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -65,7 +69,7 @@ public class Login extends Activity {
 
                 Log.i("Login", "inainte de async");
                 new AttemptLogin().execute();
-
+                m = 1;
                 Log.i("login", "Attempt login finished");
                 //int j = retRasp();
                 Log.i("login", "m " + m);
@@ -111,7 +115,7 @@ public class Login extends Activity {
     @Override
     public void onBackPressed()
     {
-        //TODO toast ("operation not permitted")
+        //TODO sa ies din aplicatie
     }
 
 }
@@ -120,31 +124,31 @@ class AttemptLogin extends AsyncTask<Object, Object, Integer>
 {
 
     protected Integer doInBackground(Object... urls) {
-        String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36";
 
         try {
-            trustAllCertificates();
-            String str = "https://86.104.210.226/FF/login.php?id=" + MainActivity.iD + "&pass=" + Login.pass;
+            InternetConnection.trustAllCertificates();
+            String str = InternetConnection.host +"login.php?id=" + MainActivity.iD + "&pass=" + Login.pass;
+            HttpsURLConnection conn = InternetConnection.connectInternet(str);
             //MainActivity.t1.setText("connecting");
             // MainActivity.t2.setText(st); //testare string st
-            Log.i("Login","str:"+ str);
-            URL obj = new URL(str);
-            Log.i("Login","obj: "+ obj);
-            HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
-            Log.i("Login","con: "+ conn);
-            conn.setRequestMethod("GET");
-            Log.i("Login","get: ");
-            conn.setDoOutput(true);
-            Log.i("Login","doOutput: ");
-            conn.setRequestProperty("User-Agent", USER_AGENT);
+//            Log.i("Login","str:"+ str);
+//            URL obj = new URL(str);
+//            Log.i("Login","obj: "+ obj);
+//            HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
+//            Log.i("Login","con: "+ conn);
+//            conn.setRequestMethod("GET");
+//            Log.i("Login","get: ");
+//            conn.setDoOutput(true);
+//            Log.i("Login","doOutput: ");
+//            conn.setRequestProperty("User-Agent", USER_AGENT);
+//
+//            Log.i("Login","req ");
+//            conn.setInstanceFollowRedirects(false);
+//            conn.connect();
+//            Log.i("Login","connect: ");
+//            Log.i("Login","ok? ");
 
-            Log.i("Login","req ");
-            conn.setInstanceFollowRedirects(false);
-            conn.connect();
-            Log.i("Login","connect: ");
-            Log.i("Login","ok? ");
-
-             int responseCode = conn.getResponseCode();
+            int responseCode = conn.getResponseCode();
             Log.i("Login","response code? "+responseCode);
 
 
@@ -178,37 +182,7 @@ class AttemptLogin extends AsyncTask<Object, Object, Integer>
     protected int onPostExecute(String result) {
         return Login.m;
     }
-    public static void trustAllCertificates() {
-        try {
-            TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        public X509Certificate[] getAcceptedIssuers() {
-                            X509Certificate[] myTrustedAnchors = new X509Certificate[0];
-                            return myTrustedAnchors;
-                        }
 
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
-
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String arg0, SSLSession arg1) {
-                    return true;
-                }
-            });
-        } catch (Exception e) {
-        }
-    }
 
 }
 

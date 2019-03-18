@@ -30,7 +30,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         LatLng Eu = new LatLng(MyLocationListener.latitude, MyLocationListener.longitude);
-        LatLng El = new LatLng(GetPos.longit1, GetPos.latit1);
+        LatLng El = new LatLng(GetPos.longitude, GetPos.latitude);
 
         mMap.addMarker(new MarkerOptions().position(Eu).title("Eu"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Eu));

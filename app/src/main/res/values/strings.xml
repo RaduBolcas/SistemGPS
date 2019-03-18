@@ -10,12 +10,14 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_example">Example action</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_meniu">Meniu</string>
     <string name="title_activity_get_id">GetID</string>
+    <string name="title_activity_chat">Chat</string>
+    <string name="title_activity_chat_login">Chat_login</string>
+    <string name="title_activity_chat_register">Chat_register</string>
+    <string name="title_activity_chat_user">Chat_user</string>
+
 
 </resources>

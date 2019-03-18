@@ -1,4 +1,4 @@
-package com.example.radu.sistemgps;
+package com.login;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,7 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.net.HttpURLConnection;
+import com.example.radu.sistemgps.InternetConnection;
+import com.example.radu.sistemgps.MainActivity;
+import com.example.radu.sistemgps.Meniu;
+import com.example.radu.sistemgps.R;
+
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -70,29 +74,30 @@ class AttemptLogout extends AsyncTask<Object, Object, String>
 {
 
     protected String doInBackground(Object... urls) {
-        String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36";
+//        String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36";
 
         try {
             if(Login.pass!=null)
             {Logout.passLogout=Login.pass;}
             else{Logout.passLogout=Register.passRegister;}
 
-            trustAllCertificates();
-            String strg = "https://86.104.210.226/FF/logout.php?id=" + MainActivity.iD + "&pass=" + Logout.passLogout;
+            InternetConnection.trustAllCertificates();
+            String strg = InternetConnection.host + "logout.php?id=" + MainActivity.iD + "&pass=" + Logout.passLogout;
+            HttpsURLConnection con = InternetConnection.connectInternet(strg);
 
-            Log.i("Logout", "str:" + strg);
-            URL obj = new URL(strg);
-            Log.i("Logout", "obj: " + obj);
-            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-            Log.i("Logout", "con: " + con);
-            con.setRequestMethod("GET");
-            Log.i("Logout", "get: ");
-            con.setDoOutput(true);
-            Log.i("Logout", "doOutput: ");
-            con.setRequestProperty("User-Agent", USER_AGENT);
-            Log.i("Logout", "req ");
-            con.connect();
-            Log.i("Logout", "connect: ");
+//            Log.i("Logout", "str:" + strg);
+//            URL obj = new URL(strg);
+//            Log.i("Logout", "obj: " + obj);
+//            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+//            Log.i("Logout", "con: " + con);
+//            con.setRequestMethod("GET");
+//            Log.i("Logout", "get: ");
+//            con.setDoOutput(true);
+//            Log.i("Logout", "doOutput: ");
+//            con.setRequestProperty("User-Agent", USER_AGENT);
+//            Log.i("Logout", "req ");
+//            con.connect();
+//            Log.i("Logout", "connect: ");
             Log.i("Logout", "ok? " + con.getResponseMessage());
             //Logout.connexOK=con.getResponseMessage().equals("OK");
 
@@ -113,37 +118,6 @@ class AttemptLogout extends AsyncTask<Object, Object, String>
     protected String onPostExecute(Void result)
     {
         return "deconectare reusita";
-    }
-    public static void trustAllCertificates() {
-        try {
-            TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        public X509Certificate[] getAcceptedIssuers() {
-                            X509Certificate[] myTrustedAnchors = new X509Certificate[0];
-                            return myTrustedAnchors;
-                        }
-
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
-
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String arg0, SSLSession arg1) {
-                    return true;
-                }
-            });
-        } catch (Exception e) {
-        }
     }
 
 }

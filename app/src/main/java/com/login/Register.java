@@ -1,4 +1,4 @@
-package com.example.radu.sistemgps;
+package com.login;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,9 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.radu.sistemgps.InternetConnection;
+import com.example.radu.sistemgps.MainActivity;
+import com.example.radu.sistemgps.R;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -58,7 +61,7 @@ public class Register extends Activity {
                     Log.i("register", "inainte de async");
                      new AttemptRegister().execute();
                     //if (connexOK = true && attemptRegister.val=="")
-                    Log.i("Register", "valoare dupa async" + AttemptRegister.val);/// nu raspunde nimic daca nu exista; raspunde cu string "exista" daca contul exista
+                    //Log.i("Register", "valoare dupa async" + AttemptRegister.val);/// nu raspunde nimic daca nu exista; raspunde cu string "exista" daca contul exista
 
                     if (AttemptRegister.val.equals( "" ))
                     {
@@ -83,27 +86,28 @@ public class Register extends Activity {
 
 
         protected String doInBackground(Object... urls) {
-        String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36";
+//        String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36";
 
         try {
-            trustAllCertificates();
-            String strg = "https://86.104.210.226/FF/register.php?id=" + MainActivity.iD +"&n="+ MainActivity.name+"&pass=" + Register.passRegister;
+            InternetConnection.trustAllCertificates();
+            String strg = InternetConnection.host + "register.php?id=" + MainActivity.iD +"&n="+ MainActivity.name+"&pass=" + Register.passRegister;
+            HttpsURLConnection conn = InternetConnection.connectInternet(strg);
             //MainActivity.t1.setText("connecting");
             // MainActivity.t2.setText(st); //testare string st
-                        Log.i("register", "str:" + strg);
-            URL obj = new URL(strg);
-                        Log.i("register", "obj: " + obj);
-            HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
-                        Log.i("register", "con: " + conn);
-            conn.setRequestMethod("GET");
-                        Log.i("register", "get: ");
-            conn.setDoOutput(true);
-                        Log.i("register", "doOutput: ");
-            conn.setRequestProperty("User-Agent", USER_AGENT);
-                        Log.i("register", "req ");
-            conn.connect();
-                        Log.i("register", "connect: ");
-                        Log.i("register", "ok? " + conn.getResponseMessage());
+//                        Log.i("register", "str:" + strg);
+//            URL obj = new URL(strg);
+//                        Log.i("register", "obj: " + obj);
+//            HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
+//                        Log.i("register", "con: " + conn);
+//            conn.setRequestMethod("GET");
+//                        Log.i("register", "get: ");
+//            conn.setDoOutput(true);
+//                        Log.i("register", "doOutput: ");
+//            conn.setRequestProperty("User-Agent", USER_AGENT);
+//                        Log.i("register", "req ");
+//            conn.connect();
+//                        Log.i("register", "connect: ");
+            Log.i("register", "ok? " + conn.getResponseMessage());
             connexOK=conn.getResponseMessage().equals("OK");
             //MainActivity.t4.setText("putPos:   " + con.getResponseMessage()); ///verif cconexiunii
 
@@ -138,38 +142,6 @@ public class Register extends Activity {
     {
         return val;
     }
-
-        public static void trustAllCertificates() {
-            try {
-                TrustManager[] trustAllCerts = new TrustManager[]{
-                        new X509TrustManager() {
-                            public X509Certificate[] getAcceptedIssuers() {
-                                X509Certificate[] myTrustedAnchors = new X509Certificate[0];
-                                return myTrustedAnchors;
-                            }
-
-                            @Override
-                            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                            }
-
-                            @Override
-                            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                            }
-                        }
-                };
-
-                SSLContext sc = SSLContext.getInstance("SSL");
-                sc.init(null, trustAllCerts, new SecureRandom());
-                HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-                HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                    @Override
-                    public boolean verify(String arg0, SSLSession arg1) {
-                        return true;
-                    }
-                });
-            } catch (Exception e) {
-            }
-        }
 
 
 }
