@@ -97,12 +97,13 @@
         android:textColorHighlight="#cb7c114c"
         android:textColorHint="#78b7ac" />
 
-    <TextView android:text = "Login"
+    <TextView
+        android:id="@+id/textview"
         android:layout_width="wrap_content"
-        android:layout_height = "wrap_content"
-        android:id = "@+id/textview"
-        android:textSize = "34dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="Login"
+        android:textSize="34dp" />
 
 </RelativeLayout>

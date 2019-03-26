@@ -14,11 +14,15 @@ import com.example.radu.sistemgps.InternetConnection;
 import com.example.radu.sistemgps.MainActivity;
 import com.example.radu.sistemgps.R;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -30,6 +34,7 @@ import javax.net.ssl.X509TrustManager;
 public class Register extends Activity {
     EditText edtxt1, edtxt2, edtxt3, edtxt4;
     public static String passRegister, pass2;
+    public static int m=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +46,6 @@ public class Register extends Activity {
         edtxt3 = (EditText) findViewById(R.id.editTextc);
         edtxt4 = (EditText) findViewById(R.id.editTextd);
 
-
         final Button button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -51,96 +55,88 @@ public class Register extends Activity {
                 pass2 = edtxt3.getText().toString();
                 MainActivity.name = edtxt4.getText().toString();
 
-                Log.i("register", "user:" + edtxt1.getText().toString());//id
-                Log.i("register", "pass:" + passRegister);
-                Log.i("register", "pass2:" + pass2);
+                Log.i("Register", "user:" + edtxt1.getText().toString());//id
+                Log.i("Register", "pass:" + passRegister);
+                Log.i("Register", "pass2:" + pass2);
 
                 if (passRegister.equals(pass2) ) {
-                   Logout.passLogout=passRegister;
+                    Logout.passLogout=passRegister;
 
-                    Log.i("register", "inainte de async");
-                     new AttemptRegister().execute();
-                    //if (connexOK = true && attemptRegister.val=="")
-                    //Log.i("Register", "valoare dupa async" + AttemptRegister.val);/// nu raspunde nimic daca nu exista; raspunde cu string "exista" daca contul exista
+                    Log.i("Register", "inainte de async");
+                    AttemptRegister myRegister = new AttemptRegister();
 
-                    if (AttemptRegister.val.equals( "" ))
-                    {
+                    try {
+                        m=myRegister.execute().get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i("Register", "Attempt Register finished");
+                    Log.i("Register", "m=" + m);
+                    if (m==1){
                         Toast.makeText(getApplicationContext(), "You succesfully registered. Please Login", Toast.LENGTH_SHORT).show();
                         Intent a = new Intent(Register.this, Login.class);
                         startActivity(a);
                         finish();
                     }else{
                         Toast.makeText(getApplicationContext(), "The account exists already", Toast.LENGTH_SHORT).show();
+                        MainActivity.iD = null;
+                        passRegister = null;
+                        pass2 = null;
+                        MainActivity.name = null;
                     }
+                }else{
+                    Toast.makeText(getApplicationContext(), "The passwords don't match", Toast.LENGTH_SHORT).show();
+                    MainActivity.iD = null;
+                    passRegister = null;
+                    pass2 = null;
+                    MainActivity.name = null;
                 }
             }
         });
     }
 
 }
-    class AttemptRegister extends AsyncTask<Object, Object, String>
+    class AttemptRegister extends AsyncTask<Object, Object, Integer>
     {
+        private int response =0;
 
-    public static String val;
-    public static boolean connexOK;
-
-
-        protected String doInBackground(Object... urls) {
-//        String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36";
+        protected Integer doInBackground(Object... urls) {
 
         try {
             InternetConnection.trustAllCertificates();
             String strg = InternetConnection.host + "register.php?id=" + MainActivity.iD +"&n="+ MainActivity.name+"&pass=" + Register.passRegister;
             HttpsURLConnection conn = InternetConnection.connectInternet(strg);
-            //MainActivity.t1.setText("connecting");
-            // MainActivity.t2.setText(st); //testare string st
-//                        Log.i("register", "str:" + strg);
-//            URL obj = new URL(strg);
-//                        Log.i("register", "obj: " + obj);
-//            HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
-//                        Log.i("register", "con: " + conn);
-//            conn.setRequestMethod("GET");
-//                        Log.i("register", "get: ");
-//            conn.setDoOutput(true);
-//                        Log.i("register", "doOutput: ");
-//            conn.setRequestProperty("User-Agent", USER_AGENT);
-//                        Log.i("register", "req ");
-//            conn.connect();
-//                        Log.i("register", "connect: ");
-            Log.i("register", "ok? " + conn.getResponseMessage());
-            connexOK=conn.getResponseMessage().equals("OK");
-            //MainActivity.t4.setText("putPos:   " + con.getResponseMessage()); ///verif cconexiunii
+            Log.i("Register", "ok? " + conn.getResponseMessage());
 
-            if (connexOK  ) {
-                BufferedReader inBuff = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                Log.i("Register", "in" + inBuff);
-                StringBuilder raspuns = new StringBuilder();
-                Log.i("Register", "in" + raspuns);/// nu raspunde nimic daca nu exista; raspunde cu string "exista" daca contul exista
+            BufferedReader inBuff = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder register = new StringBuilder();
+            Log.i("Register", "inBuff=" + inBuff);/// nu raspunde nimic daca nu exista; raspunde cu string "exista" daca contul exista
 
-                String line;
-                while ((line = inBuff.readLine()) != null) {
-                    raspuns.append(line).append('\n');
-                }
-                val = raspuns.toString();
-                val = val.replaceAll("\\s", "");
-                Log.i("Register", "valoare" + val);/// nu raspunde nimic daca nu exista; raspunde cu string "exista" daca contul exista
-
+            String line;
+            while ((line = inBuff.readLine()) != null) {
+                register.append(line).append('\n');
             }
+            JSONObject jObj =new JSONObject(String.valueOf(register));
+            Log.i("Register", "jobj" + jObj.getString("connOK"));/// nu raspunde nimic daca nu exista; raspunde cu string "exista" daca contul exista
+            if(Objects.equals(jObj.getString("connOK"), "OK")){
+                response =1 ;//Login.m = 1;
+                Log.i("Register","response"+response);
+            }
+
         } catch (Exception e) {
             // tx2.setText("err Logout");
             //tx2.setText(e.getLocalizedMessage());
+            Log.i("Register", "exceptie: "+e.getCause());
             e.printStackTrace();
         }
-
-        return val;
+        Log.i("Register","return response="+ response);
+        return response;
     }
         protected void onProgressUpdate(Void... progress) {
-
         }
 
-    protected String onPostExecute(Void result)
-    {
-        return val;
+    protected int onPostExecute(int result) {
+        return result;
     }
 
 
