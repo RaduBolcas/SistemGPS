@@ -10,35 +10,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.login.Login;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
-
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
-public class GetID extends Activity {
+public class Group extends Activity {
     EditText id;
     public static TextView t1, t2;
-    private String TAG ="GetID";
+    private String TAG ="Group";
+    public static String groupID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_get_id);
+        setContentView(R.layout.activity_group);
+
         t1 = new TextView(this);
         t1 = (TextView) findViewById(R.id.textView6);
         t2 = new TextView(this);
@@ -46,31 +34,29 @@ public class GetID extends Activity {
 
         id = (EditText)findViewById(R.id.editTextid);
 
-
-        AttemptGetID getID = new AttemptGetID();
+        AttemptGetGroupMmbership getGroupMmbership = new AttemptGetGroupMmbership();
         try {
-            getID.setTAG(TAG);
-            getID.execute().get();
+            getGroupMmbership.setTAG(TAG);
+            getGroupMmbership.execute().get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
-        final Button buttonID = (Button) findViewById(R.id.buttonID);
-        buttonID.setOnClickListener(new View.OnClickListener() {
+        final Button selectGroup = (Button) findViewById(R.id.buttonSelect);
+        selectGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
-                MainActivity.partneriD=id.getText().toString();
-                Intent i=new Intent(GetID.this, MainActivity.class);
+                groupID = id.getText().toString();//TODO to use this value to select the group and show the group on the map
+                Intent i=new Intent(Group.this, MapsActivity.class);
                 startActivity(i);
-
                 finish();
             }
         });
+
     }
 
-    @Override
+      @Override
     public void onBackPressed() {
-        Intent y=new Intent(GetID.this, Meniu.class);
+        Intent y=new Intent(Group.this, GroupOption.class);
         startActivity(y);
         finish();
         return;
@@ -78,31 +64,32 @@ public class GetID extends Activity {
 
 }
 
-class AttemptGetID extends AsyncTask<Object, Object, Integer> {
+class AttemptGetGroupMmbership extends AsyncTask<Object, Object, Integer> {
     private String TAG ;
     private int response =0;
     @Override
     protected Integer doInBackground(Object... urls) {
         try {
             InternetConnection.trustAllCertificates();
-            String url = InternetConnection.host +"getIDs.php";
+            String url = InternetConnection.host +"getMyGroupMembership.php?idU=" +MainActivity.iD;
             HttpsURLConnection con =InternetConnection.connectInternet(url);
-            GetID.t1.setText("GetID:   " + con.getResponseMessage()); ///verif cconexiunii
+            Group.t1.setText("GetGroup:   " + con.getResponseMessage()); ///verif cconexiunii
 
             StringBuilder builderString = InternetConnection.processServerData(con);
 
             JSONObject jUsersObj =new JSONObject(String.valueOf(builderString));
-            JSONArray users = jUsersObj.getJSONArray("users");
+            JSONArray users = jUsersObj.getJSONArray("groups");
             for (int i=0; i<users.length();i++ ) {
                 JSONObject jObj = users.getJSONObject(i);
                 String connOK = jObj.getString("connOK");
-                String id = jObj.getString("ID_User");
-                String nickname = jObj.getString("Nickname");
-                GetID.t2.append( id + "  "+nickname + "\n");
+                String idGroup = jObj.getString("ID_Group");
+                String group_name = jObj.getString("Group_name");
+                Group.t2.append( idGroup + "  "+group_name + "\n");
             }
 
         } catch (Exception e) {
-            GetID.t2.setText(e.getLocalizedMessage());
+
+            Group.t2.setText(e.getLocalizedMessage());
             e.printStackTrace();
         }
         Log.i(TAG,"return response="+ response);

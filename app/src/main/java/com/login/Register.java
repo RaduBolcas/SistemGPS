@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.radu.sistemgps.Group;
+import com.example.radu.sistemgps.GroupOption;
 import com.example.radu.sistemgps.InternetConnection;
 import com.example.radu.sistemgps.MainActivity;
 import com.example.radu.sistemgps.R;
@@ -82,5 +85,13 @@ public class Register extends Activity {
         passRegister = null;
         pass2 = null;
         MainActivity.name = null;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent y=new Intent(Register.this, Login.class);
+        startActivity(y);
+        finish();
+        return;
     }
 }

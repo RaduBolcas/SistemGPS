@@ -43,7 +43,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private float mCurrentDegree = 0f;
     private float mCurrentDegree2 = 0f;
 
-    public static Location loc = null;
+    //public static Location loc = null;
     public static int myStatus=0;
     public static String iD ;
     public static String partneriD;
@@ -51,8 +51,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     public static String name ;
     public static float bearing = 0; ///// metoda onSensorChanged - calculul rotatiei
 
-    public static Location loc2 = new Location(""); //loc2=locatie telefonul partener
-    public static Location loc1 = new Location(""); //loc1=locatie telefonul meu
+    public static Location hisLocation = new Location(""); //loc2=locatie telefonul partener
+    public static Location myLocation = new Location(""); //loc1=locatie telefonul meu
 
 
     @Override
@@ -63,12 +63,12 @@ public class MainActivity extends Activity implements SensorEventListener {
         StrictMode.setThreadPolicy(policy);
 
 
-            setContentView(R.layout.activity_main);
-            mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-            mPointer = (ImageView) findViewById(R.id.pointer);
-            mPointer2 = (ImageView) findViewById(R.id.pointer2);
+        setContentView(R.layout.activity_main);
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mPointer = (ImageView) findViewById(R.id.pointer);
+        mPointer2 = (ImageView) findViewById(R.id.pointer2);
 
 
         Switch mainSwitch= (Switch) findViewById(R.id.switch1); // seteaza dinamic val status
@@ -112,8 +112,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
         /////////////////////////////////////////////////////
 
-        loc1.setLatitude(2.0);
-        loc1.setLongitude(2.0);
+        myLocation.setLatitude(2.0);
+        myLocation.setLongitude(2.0);
 
         runThread();/// thread pt actualizare GetPosition si PutPosition
 
@@ -241,8 +241,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 
                             @Override
                             public void run() {
-                                MyLocationListener.updateMyPos(loc1);
-                                GetPos.updateHisPos(loc2);
+                                MyLocationListener.updateMyPos(myLocation);
+                                GetPos.updateHisPos();
                             }
                         });
                         Thread.sleep(2000);

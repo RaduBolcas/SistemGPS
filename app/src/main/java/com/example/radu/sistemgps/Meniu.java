@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.chat.Chat_login;
 import com.login.Logout;
 
 
@@ -18,41 +20,54 @@ public class Meniu extends Activity {
         setContentView(R.layout.activity_meniu);
 
         final Button buttonA = (Button) findViewById(R.id.buttonA); // FF
-            buttonA.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(),"FF...",Toast.LENGTH_SHORT).show();
-                    Intent a=new Intent(Meniu.this, GetID.class);
-                    startActivity(a);
-                    finish();
-                }
-            });
+        buttonA.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"FF...",Toast.LENGTH_SHORT).show();
+                Intent a=new Intent(Meniu.this, GetID.class);
+                startActivity(a);
+                finish();
+            }
+        });
 
-            final Button buttonB = (Button) findViewById(R.id.buttonB); //GoogleMaps
-            buttonB.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
+        final Button buttonB = (Button) findViewById(R.id.buttonB); //GroupOption
+        buttonB.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
 
-                    Toast.makeText(getApplicationContext(),"Maps...",Toast.LENGTH_SHORT).show();
-                    Intent e=new Intent(Meniu.this, MapsActivity.class);
-                    startActivity(e);
-                    finish();
-                }
-            });
+                Toast.makeText(getApplicationContext(),"Groups...",Toast.LENGTH_SHORT).show();
+                Intent e=new Intent(Meniu.this, GroupOption.class);
+                startActivity(e);
+                finish();
+            }
+        });
 
-                    /*pt locatie fixaaaa*/
-            final Button buttonC = (Button) findViewById(R.id.buttonC); //FL
-            buttonC.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // Perform action on click
-                    Toast.makeText(getApplicationContext(),"FL...",Toast.LENGTH_SHORT).show();
+                /*pt locatie fixaaaa*/
+        final Button buttonC = (Button) findViewById(R.id.buttonC); //FL
+        buttonC.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                Toast.makeText(getApplicationContext(),"FL...",Toast.LENGTH_SHORT).show();
 
-                    Intent i=new Intent(Meniu.this, InsertCoord.class);
-                    startActivity(i);
-                    finish();
+                Intent i=new Intent(Meniu.this, InsertCoord.class);
+                startActivity(i);
+                finish();
 
-                }
-            });
-        final Button buttonD = (Button) findViewById(R.id.buttonD); //Logout
+            }
+        });
+
+        final Button buttonD = (Button) findViewById(R.id.buttonD); //Chat
         buttonD.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+
+                Intent o=new Intent(Meniu.this, Chat_login.class);
+                startActivity(o);
+                finish();
+
+            }
+        });
+
+        final Button buttonE = (Button) findViewById(R.id.buttonE); //Logout
+        buttonE.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
 
@@ -62,7 +77,6 @@ public class Meniu extends Activity {
 
             }
         });
-
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.example.radu.sistemgps;
 
-import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -11,22 +13,16 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-/**
- * Created by Radu on 08-Jan-19.
- * This class file is responsible with the internet connection.
- */
-
 public final class InternetConnection {
 
-    public static final String host = "https://10.2.248.69/";
+    public static final String host = "https://192.168.1.106/";
 
     public static HttpsURLConnection connectInternet( String url_address) {
         String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36";
 
-        HttpsURLConnection con =null;
+        HttpsURLConnection con = null;
         try {
             trustAllCertificates();
-          //  String st = "https://192.168.1.6/putPosition.php?id=" + MainActivity.iD + "&n=" + MainActivity.name + "&La=" + loc.getLatitude() + "&Lg=" + loc.getLongitude()+"&st="+ MainActivity.myStatus;
 
             URL obj = new URL(url_address);
             con = (HttpsURLConnection) obj.openConnection();
@@ -36,10 +32,26 @@ public final class InternetConnection {
             con.connect();
 
         } catch (Exception e) {
-            //MainActivity.t3.setText(e.getLocalizedMessage());
             e.printStackTrace();
         }
         return con;
+    }
+    public static StringBuilder processServerData(HttpsURLConnection connection) {
+        HttpsURLConnection con = connection;
+        StringBuilder builderString = null;
+        try {
+            BufferedReader inBuff = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            builderString = new StringBuilder();
+            String line;
+            while ((line = inBuff.readLine()) != null) {
+                builderString.append(line).append('\n');
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return builderString;
     }
 
     public static void trustAllCertificates() {
@@ -75,5 +87,4 @@ public final class InternetConnection {
     }
 
 }
-
 

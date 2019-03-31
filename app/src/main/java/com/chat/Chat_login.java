@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.radu.sistemgps.Meniu;
 import com.example.radu.sistemgps.R;
 
 import org.json.JSONException;
@@ -105,5 +106,14 @@ public class Chat_login extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent x=new Intent(Chat_login.this, Meniu.class);
+        startActivity(x);
+        finish();
+        return;
     }
 }
