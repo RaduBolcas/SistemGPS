@@ -6,7 +6,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import javax.net.ssl.HttpsURLConnection;
-
+import static com.example.radu.sistemgps.MainActivity.myLocation;
+import static com.example.radu.sistemgps.MainActivity.hisLocation;
 public class GetPos {
 
     public static float bearing,distance; // x-bearing//y-distanta
@@ -14,8 +15,8 @@ public class GetPos {
     public static int hisStatus;
     public static double latitude, longitude;
 
-    public static void updateHisPos(){
-        Location hisLocation = new Location(""); //loc2=locatie telefon partener
+    public static void updateHisPos(Location loc){
+        myLocation = loc;
         try {
             InternetConnection.trustAllCertificates();
             String st = InternetConnection.host +"getPosition.php?id="+ MainActivity.partneriD;
@@ -25,17 +26,24 @@ public class GetPos {
             StringBuilder builderString = InternetConnection.processServerData(con);
 
             JSONObject jObj =new JSONObject(String.valueOf(builderString));
-            if (jObj.getString("connOK")== "OK") {
+
+            if (jObj.getString("connOK").equals("OK")) {
+
                 hisStatus = jObj.getInt("status");  //selectie status partener
+                Log.i("UpdateHisPosition","status="+ String.valueOf(hisStatus));
                 if (hisStatus != 0) {
-                    //Location loc2 = new Location(""); //loc2=locatie telefon partener
-                    hisLocation.setLatitude(jObj.getDouble("latitudine"));
-                    hisLocation.setLongitude(jObj.getDouble("longitudine"));
+//                    Log.i("UpdateHisPosition", jObj.getString("latitude"));
+                    Location loc2 = new Location(""); //loc2=locatie telefon partener
+                    loc2.setLatitude(jObj.getDouble("latitude"));
+                    loc2.setLongitude(jObj.getDouble("longitude"));
 
-                    latitude = jObj.getDouble("latitudine"); ///pt google maps
-                    longitude = jObj.getDouble("longitudine"); ///pt google maps
+//                    hisLocation.setLatitude(jObj.getDouble("latitude"));
+//                    hisLocation.setLongitude(jObj.getDouble("longitude"));
 
-                    dateTime = jObj.getString("dataOra");
+                    latitude = jObj.getDouble("latitude"); ///pt google maps
+                    longitude = jObj.getDouble("longitude"); ///pt google maps
+                    Log.i("UpdateHisPosition", "lati&longi=: " + latitude+"   "+longitude );
+                    dateTime = jObj.getString("dateTime");
                     Log.i("UpdateHisPosition", "dataOra: " + dateTime);
 
                     MainActivity.t2.setText("Him " + (float) latitude + "  " + (float) longitude);
@@ -44,16 +52,17 @@ public class GetPos {
                     MainActivity.myLocation.setLatitude(MyLocationListener.latitude);
                     MainActivity.myLocation.setLongitude(MyLocationListener.longitude);
                     Log.i("UpdateHisPosition", "my coord" + MainActivity.myLocation);
-                    bearing = MainActivity.myLocation.bearingTo(hisLocation); //salvez bearingul ce ia val intre [-180,180]grade
+                    bearing = MainActivity.myLocation.bearingTo(loc2); //salvez bearingul ce ia val intre [-180,180]grade
                     Log.i("UpdateHisPosition", "coord " + MyLocationListener.latitude + " " + MyLocationListener.longitude);
                     Log.i("UpdateHisPosition", "his coord" + hisLocation);
+                    Log.i("UpdateHisPosition", "his coord-loc2=" + loc2);
 
                     if (bearing < 0) {
                         bearing = bearing + 360;
                         Log.i("UpdateHisPosition", "bearing="+bearing);
                     } // corectia valorii bearing
 
-                    distance = MainActivity.myLocation.distanceTo(hisLocation);//distanta intre locatii
+                    distance = MainActivity.loc.distanceTo(loc2);//distanta intre locatii
                 } else {
                     onStatusChanged();
                 }

@@ -2,15 +2,12 @@ package com.example.radu.sistemgps;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import org.json.JSONObject;
+import android.widget.TextView;
 
 import java.util.concurrent.ExecutionException;
 
@@ -19,34 +16,49 @@ import javax.net.ssl.HttpsURLConnection;
 public class DeleteGroup extends Activity {
 
     EditText groupName;
-    private String TAG ="CreateGroup";
+    private String TAG ="DeleteGroup";
+    public static TextView t1, t2;
     public int idGroup;
     public static String group_name =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_group);
+        setContentView(R.layout.activity_delete_group);
 
         groupName = (EditText)findViewById(R.id.editTextid);
+        t1 = new TextView(this);
+        t1 = (TextView) findViewById(R.id.textView6);
+        t2 = new TextView(this);
+        t2 = (TextView) findViewById(R.id.textView7);
 
-        final Button selectGroup = (Button) findViewById(R.id.buttonSelect);
+        AttemptIsAdmin isAdmin = new AttemptIsAdmin();
+        try {
+            String url = InternetConnection.host + "isAdmin.php?idUA=" + MainActivity.iD;
+            isAdmin.setTAG(TAG);
+            isAdmin.setUrl(url);
+            isAdmin.setTextView(t2);
+            idGroup= isAdmin.execute().get();
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        final Button selectGroup = (Button) findViewById(R.id.buttonDelete);
         selectGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 group_name = groupName.getText().toString();
-
                 AttemptDeleteGroup deleteGroup = new AttemptDeleteGroup();
                 try {
-                    String url = InternetConnection.host + "isAdmin.php?idUA=" + MainActivity.iD;
+                    String url2 = InternetConnection.host + "deleteGroup.php?idG=" + group_name;
                     deleteGroup.setTAG(TAG);
-                    deleteGroup.setUrl(url);
-                    idGroup= deleteGroup.execute().get();
-
-                    Toast.makeText(getApplicationContext(),idGroup + "  " + group_name,Toast.LENGTH_SHORT).show();
+                    deleteGroup.setUrl(url2);
+                    deleteGroup.execute().get();
 
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
+
                 Intent i=new Intent(DeleteGroup.this, GroupOption.class);
                 startActivity(i);
                 finish();
@@ -63,44 +75,23 @@ public class DeleteGroup extends Activity {
     }
 
 }
-class AttemptDeleteGroup extends AsyncTask<Object, Object, Integer> {
-    private String TAG;
-    int id;
-    private String url;
+
+
+class AttemptDeleteGroup extends AttemptIsAdmin {
 
     @Override
     protected Integer doInBackground(Object... urls) {
         try {
             InternetConnection.trustAllCertificates();
             HttpsURLConnection con = InternetConnection.connectInternet(url);
-
-            StringBuilder builderString = InternetConnection.processServerData(con);
-
-            JSONObject jObj = new JSONObject(String.valueOf(builderString));
-            id = jObj.getInt("GroupID");
-
+            Log.i(TAG, "okDeleteGroup="+con.getResponseMessage());
+            Log.i(TAG, "urlDeleteGroup="+url);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i(TAG, "return id=" + id);
-        return id; //serverResponse
+        Log.i(TAG, "responseDeleteGroup =" + response);
+        return response; //serverResponse
     }
 
-    protected int onPostExecute(int result) {
-        return result; //serverResponse
-    }
 
-    public void setTAG(String tag) {
-        this.TAG = tag;
-    }
-
-    protected void onProgressUpdate(Void... progress) {
-    }
-
-    @Override
-    protected void onPreExecute() {
-    }
-    public void setUrl (String url){
-        this.url= url;
-    }
 }

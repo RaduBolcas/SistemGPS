@@ -43,7 +43,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private float mCurrentDegree = 0f;
     private float mCurrentDegree2 = 0f;
 
-    //public static Location loc = null;
+    public static Location loc = null;
     public static int myStatus=0;
     public static String iD ;
     public static String partneriD;
@@ -116,6 +116,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         myLocation.setLongitude(2.0);
 
         runThread();/// thread pt actualizare GetPosition si PutPosition
+        updateHistoryThread();
 
         LocationManager mlocManager = null;
         LocationListener mlocListener;
@@ -242,10 +243,32 @@ public class MainActivity extends Activity implements SensorEventListener {
                             @Override
                             public void run() {
                                 MyLocationListener.updateMyPos(myLocation);
-                                GetPos.updateHisPos();
+                                GetPos.updateHisPos(hisLocation);
                             }
                         });
                         Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
+    private void updateHistoryThread() {
+
+        new Thread() {
+            public void run() {
+                while (true) {
+                    try {
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                MyLocationListener.updateMyHistory(myLocation);
+
+                            }
+                        });
+                        Thread.sleep(600000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

@@ -50,6 +50,7 @@ public class GetID extends Activity {
         AttemptGetID getID = new AttemptGetID();
         try {
             getID.setTAG(TAG);
+            getID.setTextView(t1);
             getID.execute().get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -81,13 +82,13 @@ public class GetID extends Activity {
 class AttemptGetID extends AsyncTask<Object, Object, Integer> {
     private String TAG ;
     private int response =0;
+    protected static TextView t1;
     @Override
     protected Integer doInBackground(Object... urls) {
         try {
             InternetConnection.trustAllCertificates();
             String url = InternetConnection.host +"getIDs.php";
             HttpsURLConnection con =InternetConnection.connectInternet(url);
-            GetID.t1.setText("GetID:   " + con.getResponseMessage()); ///verif cconexiunii
 
             StringBuilder builderString = InternetConnection.processServerData(con);
 
@@ -98,11 +99,10 @@ class AttemptGetID extends AsyncTask<Object, Object, Integer> {
                 String connOK = jObj.getString("connOK");
                 String id = jObj.getString("ID_User");
                 String nickname = jObj.getString("Nickname");
-                GetID.t2.append( id + "  "+nickname + "\n");
+                t1.append( id + "  "+nickname + "\n");
             }
 
         } catch (Exception e) {
-            GetID.t2.setText(e.getLocalizedMessage());
             e.printStackTrace();
         }
         Log.i(TAG,"return response="+ response);
@@ -116,6 +116,9 @@ class AttemptGetID extends AsyncTask<Object, Object, Integer> {
         this.TAG=tag;
     }
     protected void onProgressUpdate(Void... progress) {
+    }
+    public void setTextView(TextView text){
+        this.t1=text;
     }
     @Override
     protected void onPreExecute() {

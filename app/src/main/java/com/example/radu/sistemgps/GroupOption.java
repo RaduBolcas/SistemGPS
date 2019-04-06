@@ -2,14 +2,11 @@ package com.example.radu.sistemgps;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.chat.Chat_login;
-import com.login.Logout;
 
 public class GroupOption extends Activity {
 
@@ -39,14 +36,23 @@ public class GroupOption extends Activity {
             }
         });
 
+        final Button addMember = (Button) findViewById(R.id.buttonC); //Add Member
+        addMember.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"Add or Remove Member",Toast.LENGTH_SHORT).show();
+                Intent u=new Intent(GroupOption.this, EditGroupMember.class);
+                startActivity(u);
+                finish();
 
-        final Button deleteGroup = (Button) findViewById(R.id.buttonC); //Delete group
+            }
+        });
+
+        final Button deleteGroup = (Button) findViewById(R.id.buttonD); //Delete group
         deleteGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-//TODO call isAdmin ca la GetID si apoi select group ID and call deleteGroup
                 Toast.makeText(getApplicationContext(),"Delete group",Toast.LENGTH_SHORT).show();
-                Intent i=new Intent(GroupOption.this, DeleteGroup.class);
-                startActivity(i);
+                Intent r=new Intent(GroupOption.this, DeleteGroup.class);
+                startActivity(r);
                 finish();
 
             }
@@ -54,7 +60,6 @@ public class GroupOption extends Activity {
 
 
     }
-
     @Override
     public void onBackPressed()
     {

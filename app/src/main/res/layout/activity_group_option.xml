@@ -11,28 +11,13 @@ android:paddingTop="@dimen/activity_vertical_margin"
 tools:context="com.example.radu.sistemgps.GroupOption">
 
 
-<!--<EditText-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:inputType="numberDecimal|numberSigned"-->
-    <!--android:ems="10"-->
-    <!--android:id="@+id/editTextid"-->
-    <!--android:hint="Enter ID"-->
-    <!--android:layout_below="@+id/editText"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_alignParentRight = "true"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--android:textColorHint="#78b7ac"-->
-    <!--android:layout_marginBottom="51dp"-->
-    <!--/>-->
-
 <Button
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="Select Group"
     android:id="@+id/buttonA"
     android:layout_centerHorizontal="true"
-    android:layout_marginTop="70dp" />
+    android:layout_marginTop="30dp" />
 
 <Button
     android:id="@+id/buttonB"
@@ -40,15 +25,23 @@ tools:context="com.example.radu.sistemgps.GroupOption">
     android:layout_height="wrap_content"
     android:layout_below="@+id/buttonA"
     android:layout_centerHorizontal="true"
-    android:layout_marginTop="70dp"
+    android:layout_marginTop="40dp"
     android:text="Create new group" />
-
 <Button
     android:id="@+id/buttonC"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_below="@+id/buttonB"
-    android:layout_marginTop="70dp"
+    android:layout_marginTop="40dp"
+    android:text="Add or Remove Member"
+    android:layout_centerHorizontal="true"/>
+
+<Button
+    android:id="@+id/buttonD"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/buttonC"
+    android:layout_marginTop="40dp"
     android:text="Delete group"
     android:layout_centerHorizontal="true"/>
 
