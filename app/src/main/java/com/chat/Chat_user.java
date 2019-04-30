@@ -102,4 +102,11 @@ public class Chat_user extends AppCompatActivity {
 
         pd.dismiss();
     }
+    @Override
+    public void onBackPressed()
+    {
+        Intent i=new Intent(Chat_user.this, Chat_login.class);
+        startActivity(i);
+        finish();
+    }
 }

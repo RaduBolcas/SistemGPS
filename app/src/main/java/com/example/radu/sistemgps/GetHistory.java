@@ -1,79 +1,113 @@
 package com.example.radu.sistemgps;
 
 import android.content.Intent;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import com.login.Logout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.HttpsURLConnection;
 
-/**
- * Created by Radu on 20-Mar-19.
- */
+public class GetHistory extends AppCompatActivity {
+    private String TAG ="GetHistory" ;
+    EditText historyEditText;
+    public static String time ="";
 
-public class GetHistory {
 
-    private static String connOK, dateTime ;
-    private static double latitude, longitude ;
-    private static int status;
-    private static String time;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_get_history);
+        historyEditText = (EditText)findViewById(R.id.editTextid);
 
-    public static void getHistory()
+        final Button showHistory = (Button) findViewById(R.id.showHistory);
+        showHistory.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                time = historyEditText.getText().toString();
+
+                AttemptGetHistory historyInfo = new AttemptGetHistory();
+                try {
+                    historyInfo.setTAG(TAG);
+                    HistoryMapsActivity.history=historyInfo.execute().get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                Intent i=new Intent(GetHistory.this, HistoryMapsActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+
+    }
+    @Override
+    public void onBackPressed()
     {
-        Log.i("GetHistory","");
+        Intent x=new Intent(GetHistory.this, Meniu.class);
+        startActivity(x);
+        finish();
+    }
+}
 
+class AttemptGetHistory extends AsyncTask<Object, Object, ArrayList<UserHistory>> {
+    private static String TAG ;
+
+    protected ArrayList<UserHistory> doInBackground(Object... urls) {
+
+        ArrayList<UserHistory> historyInfo = new ArrayList<UserHistory>();
         try {
             InternetConnection.trustAllCertificates();
-            //TODO to set the "time" in days for the history records. Ask users somehow
-            String st = InternetConnection.host +"getHistory.php?id=" + MainActivity.iD + "&tm=" + time ;
-            HttpsURLConnection con =InternetConnection.connectInternet(st);
+            String url = InternetConnection.host + "getHistory.php?id="+MapsActivity.iD+"&tm=" + GetHistory.time;
+            HttpsURLConnection con = InternetConnection.connectInternet(url);
 
-            //t1.setText("GetHistory:   " + con.getResponseMessage()); ///verif cconexiunii
+            StringBuilder builderString = InternetConnection.processServerData(con);
 
-            BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) ); //buffer pt a salva stream-ul
-            Log.i("GetHistory","in: "+ in);
+            JSONObject jHistoryObj = new JSONObject(String.valueOf(builderString));
+            Log.i(TAG, "jHistoryObj:"+jHistoryObj.toString());
+            JSONArray arr = jHistoryObj.getJSONArray("history");
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject jObj = arr.getJSONObject(i);
+                if (jObj.getString("connOK").equals("OK")) {
+                    Location location = new Location("");
+                    location.setLatitude(jObj.getDouble("latitude"));
+                    location.setLongitude(jObj.getDouble("longitude"));
 
-            StringBuilder history = new StringBuilder();
-            String line;
-
-            while ((line = in.readLine()) != null) {
-                history.append(line).append('\n');
+                    UserHistory history = new UserHistory(location, jObj.getString("dateTime"), jObj.getString("status"));
+                    historyInfo.add(history);
+                }
             }
-            Log.i("GetHistory","history: "+ history);
-
-            JSONObject jHistoryObj =new JSONObject(String.valueOf(history));
-            JSONArray users = jHistoryObj.getJSONArray("history");
-            for (int i=0; i<users.length();i++ ) {
-                JSONObject jObj = users.getJSONObject(i);
-                connOK = jObj.getString("connOK");
-                latitude = jObj.getDouble("latitude");
-                longitude = jObj.getDouble("longitude");
-                dateTime = jObj.getString("dateTime");
-                status = jObj.getInt("status");
-            }
-
+            Log.i(TAG, "historyAsync:" + arr.toString());
         } catch (Exception e) {
-            //t2.setText(e.getLocalizedMessage());
             e.printStackTrace();
         }
+        return historyInfo;
     }
-
-//    @Override
-//    public void onBackPressed()
-//    {
-//        Intent m=new Intent(GetHistory.this, ?.class);
-//        startActivity(m);
-//        finish();
-//        return;
-//    }
-
+    protected int onPostExecute(int result) {
+        return result; //serverResponse
+    }
+    public void setTAG (String tag){
+        this.TAG=tag;
+    }
+    protected void onProgressUpdate(Void... progress) {
+    }
+    @Override
+    protected void onPreExecute() {
+    }
 }
+
+

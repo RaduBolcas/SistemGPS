@@ -16,7 +16,7 @@
         android:text="FF"
         android:id="@+id/buttonA"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="51dp" />
+        android:layout_marginBottom="40dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -32,23 +32,31 @@
         android:layout_height="wrap_content"
         android:text="Group Options"
         android:id="@+id/buttonB"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="40dp"
         android:layout_below="@+id/buttonC"
+        android:layout_centerHorizontal="true" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="History"
+        android:id="@+id/buttonF"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/buttonB"
         android:layout_centerHorizontal="true" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Chat"
         android:id="@+id/buttonD"
-        android:layout_marginTop="56dp"
-        android:layout_below="@+id/buttonB"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/buttonF"
         android:layout_centerHorizontal="true" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Logout"
         android:id="@+id/buttonE"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="40dp"
         android:layout_below="@+id/buttonD"
         android:layout_centerHorizontal="true" />
 

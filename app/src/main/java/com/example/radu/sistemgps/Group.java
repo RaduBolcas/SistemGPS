@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import javax.net.ssl.HttpsURLConnection;
 
@@ -21,7 +22,8 @@ public class Group extends Activity {
     EditText id;
     public static TextView t1, t2;
     private String TAG ="Group";
-    public static String groupID;
+//    public static String groupID;
+//    ArrayList<String> al = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +47,7 @@ public class Group extends Activity {
         final Button selectGroup = (Button) findViewById(R.id.buttonSelect);
         selectGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                groupID = id.getText().toString();//TODO to use this value to select the group and show the group on the map
+                MapsActivity.groupID = id.getText().toString();//TODO to use this value to select the group and show the group on the map
                 Intent i=new Intent(Group.this, MapsActivity.class);
                 startActivity(i);
                 finish();

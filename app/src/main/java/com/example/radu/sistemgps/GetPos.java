@@ -3,8 +3,6 @@ package com.example.radu.sistemgps;
 import android.util.Log;
 import android.location.Location;
 import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import javax.net.ssl.HttpsURLConnection;
 import static com.example.radu.sistemgps.MainActivity.myLocation;
 import static com.example.radu.sistemgps.MainActivity.hisLocation;
@@ -13,7 +11,7 @@ public class GetPos {
     public static float bearing,distance; // x-bearing//y-distanta
     public static String dateTime;
     public static int hisStatus;
-    public static double latitude, longitude;
+//    public static double latitude, longitude;
 
     public static void updateHisPos(Location loc){
         myLocation = loc;
@@ -32,21 +30,17 @@ public class GetPos {
                 hisStatus = jObj.getInt("status");  //selectie status partener
                 Log.i("UpdateHisPosition","status="+ String.valueOf(hisStatus));
                 if (hisStatus != 0) {
-//                    Log.i("UpdateHisPosition", jObj.getString("latitude"));
                     Location loc2 = new Location(""); //loc2=locatie telefon partener
                     loc2.setLatitude(jObj.getDouble("latitude"));
                     loc2.setLongitude(jObj.getDouble("longitude"));
 
-//                    hisLocation.setLatitude(jObj.getDouble("latitude"));
-//                    hisLocation.setLongitude(jObj.getDouble("longitude"));
-
-                    latitude = jObj.getDouble("latitude"); ///pt google maps
-                    longitude = jObj.getDouble("longitude"); ///pt google maps
-                    Log.i("UpdateHisPosition", "lati&longi=: " + latitude+"   "+longitude );
+//                    latitude = jObj.getDouble("latitude"); ///pt google maps
+//                    longitude = jObj.getDouble("longitude"); ///pt google maps
+                    Log.i("UpdateHisPosition", "lati&longi=: " + loc2.getLatitude()+"   "+loc2.getLongitude() );
                     dateTime = jObj.getString("dateTime");
                     Log.i("UpdateHisPosition", "dataOra: " + dateTime);
 
-                    MainActivity.t2.setText("Him " + (float) latitude + "  " + (float) longitude);
+                    MainActivity.t2.setText("Him " + (float) loc2.getLatitude() + "  " + (float) loc2.getLongitude());
                     MainActivity.t6.setText("HisID: " + MainActivity.partneriD + " st:" + GetPos.hisStatus + "  ActiveAt: " + GetPos.dateTime);
 
                     MainActivity.myLocation.setLatitude(MyLocationListener.latitude);

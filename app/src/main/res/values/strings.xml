@@ -18,6 +18,8 @@
     <string name="title_activity_chat_login">Chat_login</string>
     <string name="title_activity_chat_register">Chat_register</string>
     <string name="title_activity_chat_user">Chat_user</string>
+    <string name="title_activity_get_history">GetHistory</string>
+    <string name="title_activity_history_maps">Map</string>
 
 
 </resources>

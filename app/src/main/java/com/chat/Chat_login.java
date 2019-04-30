@@ -43,6 +43,7 @@ public class Chat_login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Chat_login.this, Chat_register.class));
+                finish();
             }
         });
 
@@ -81,6 +82,7 @@ public class Chat_login extends AppCompatActivity {
                                         Chat_users_details.username = user;
                                         Chat_users_details.password = pass;
                                         startActivity(new Intent(Chat_login.this, Chat_user.class));
+                                        finish();
                                     }
                                     else {
                                         Toast.makeText(Chat_login.this, "incorrect password", Toast.LENGTH_LONG).show();
@@ -111,9 +113,8 @@ public class Chat_login extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        Intent x=new Intent(Chat_login.this, Meniu.class);
-        startActivity(x);
+        Intent i=new Intent(Chat_login.this, Meniu.class);
+        startActivity(i);
         finish();
-        return;
     }
 }

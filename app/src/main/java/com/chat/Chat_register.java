@@ -44,6 +44,7 @@ public class Chat_register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Chat_register.this, Chat_login.class));
+                finish();
             }
         });
 
@@ -62,11 +63,11 @@ public class Chat_register extends AppCompatActivity {
                 else if(!user.matches("[A-Za-z0-9]+")){
                     username.setError("only alphabet or number allowed");
                 }
-                else if(user.length()<4){
-                    username.setError("at least 4 characters long");
+                else if(user.length()<1){
+                    username.setError("at least 1 characters long");
                 }
-                else if(pass.length()<4){
-                    password.setError("at least 4 characters long");
+                else if(pass.length()<1){
+                    password.setError("at least 1 characters long");
                 }
                 else {
                     final ProgressDialog pd = new ProgressDialog(Chat_register.this);
@@ -116,5 +117,12 @@ public class Chat_register extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    public void onBackPressed()
+    {
+        Intent i=new Intent(Chat_register.this, Chat_login.class);
+        startActivity(i);
+        finish();
     }
 }

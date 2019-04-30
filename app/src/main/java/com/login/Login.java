@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.radu.sistemgps.InternetConnection;
 import com.example.radu.sistemgps.MainActivity;
+import com.example.radu.sistemgps.MapsActivity;
 import com.example.radu.sistemgps.Meniu;
 import com.example.radu.sistemgps.R;
 
@@ -49,9 +50,10 @@ public class Login extends Activity {
 
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v){ // Login
 
                 MainActivity.iD = edt1.getText().toString();
+                MapsActivity.iD=MainActivity.iD;
                 pass = edt2.getText().toString();
                 Logout.passLogout=pass;
 
@@ -68,7 +70,11 @@ public class Login extends Activity {
                 }
                 Log.i(TAG, "Attempt login finished");
                 Log.i(TAG, "serverResponse=" + serverResponse);
-
+    /////////////////////// TODO Delete the following shortcut
+                if(pass.equals("")){serverResponse=1;
+                    MainActivity.iD = "1";
+                    MapsActivity.iD=MainActivity.iD;}
+    ///////////////////////TODO delete above
                 if ( serverResponse == 1) {
                     Toast.makeText(getApplicationContext(), "Redirecting...", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(Login.this, Meniu.class);
@@ -98,7 +104,7 @@ public class Login extends Activity {
         });
 
         bt3.setOnClickListener(new View.OnClickListener() { //butonul Register
-            public void onClick(View v) {
+            public void onClick(View v) { // Register
                 pass = null;
                 Intent n = new Intent(Login.this, Register.class);
                 startActivity(n);

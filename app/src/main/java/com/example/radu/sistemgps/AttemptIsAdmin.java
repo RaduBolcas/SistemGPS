@@ -32,7 +32,7 @@ class AttemptIsAdmin extends AsyncTask<Object, Object, Integer> {
                 String idGroup = jObj.getString("ID_Group");
                 String group_name = jObj.getString("Group_name");
                 t1.append( idGroup + "  "+group_name + "\n");
-                Log.i("AttemptIsAdmin",idGroup + "   "+ group_name);
+                Log.i(TAG,idGroup + "   "+ group_name);
             }
 
         } catch (Exception e) {

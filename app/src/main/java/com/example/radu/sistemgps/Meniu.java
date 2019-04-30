@@ -1,10 +1,16 @@
 package com.example.radu.sistemgps;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.chat.Chat_login;
@@ -12,7 +18,6 @@ import com.login.Logout;
 
 
 public class Meniu extends Activity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,16 @@ public class Meniu extends Activity {
 
             }
         });
+        final Button buttonF = (Button) findViewById(R.id.buttonF); //Logout
+        buttonF.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent t=new Intent(Meniu.this, GetHistory.class);
+                startActivity(t);
+                finish();
+
+            }
+        });
     }
 
     @Override
@@ -85,6 +100,5 @@ public class Meniu extends Activity {
         Intent x=new Intent(Meniu.this, Logout.class);
         startActivity(x);
         finish();
-        return;
     }
 }
