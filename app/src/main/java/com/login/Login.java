@@ -73,7 +73,8 @@ public class Login extends Activity {
     /////////////////////// TODO Delete the following shortcut
                 if(pass.equals("")){serverResponse=1;
                     MainActivity.iD = "1";
-                    MapsActivity.iD=MainActivity.iD;}
+                    MapsActivity.iD=MainActivity.iD;
+                    Logout.passLogout=pass;}
     ///////////////////////TODO delete above
                 if ( serverResponse == 1) {
                     Toast.makeText(getApplicationContext(), "Redirecting...", Toast.LENGTH_SHORT).show();

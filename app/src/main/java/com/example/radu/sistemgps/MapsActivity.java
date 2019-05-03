@@ -8,8 +8,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -19,14 +17,11 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
-//import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -38,10 +33,10 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
     public static String iD;
     public static ArrayList<Group_user_details> groupMembers = new ArrayList<Group_user_details>();
     public static ArrayList<Group_user_details> previousGroupMembers = new ArrayList<Group_user_details>();
-    public static ArrayList<Marker> markers = new ArrayList<Marker>();
-    public static Location myLocation = new Location(""); //loc1=locatie telefonul meu
-
-
+    public static Location myLocation = null;
+    LocationManager locationManager;
+    Context context;
+    public String myStatus ="1";
     private GoogleMap mMap;
 
     @Override
@@ -53,48 +48,54 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-//        LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        LocationListener mlocListener  = new MyLocationListener();
-//
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            return;
-//        }
-//        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, mlocListener);
-
     }
+    LocationListener locationListener=new LocationListener() {
+        @Override
+        public void onLocationChanged(android.location.Location location) {
+            myLocation= location;
+//            String msg="Latitude: "+location.getLatitude() + " Longitude: "+location.getLongitude();
+//            Toast.makeText(context,msg,Toast.LENGTH_LONG).show();
+        }
+            @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+    };
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-        } else {
-            Toast.makeText(this, "Location permission needed", Toast.LENGTH_LONG).show();
-            finish();
-        }
-        mMap.setOnMyLocationButtonClickListener(this);
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(member));
-        runThread();
-//        updateHistoryThread();
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Location permission needed", Toast.LENGTH_LONG).show();
+            finish(); //if the permission is not granted, we exit the activity
+        }
+        mMap.setMyLocationEnabled(true);
+        context=this;
+        locationManager=(LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
+                5000,
+                0, locationListener);
+        runThread();
+        updatePosition();
+        updateHistory();
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         Intent y=new Intent(MapsActivity.this, Meniu.class);
         startActivity(y);
         finish();
         return;
     }
 
-//    @Override
-//    public void onMyLocationClick(@NonNull Location location) {
-//        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
-//    }
 
     @Override
     public boolean onMyLocationButtonClick() {
@@ -114,8 +115,6 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
 
                             @Override
                             public void run() {
-//                                MyLocationListener.updateMyPos(myLocation);
-//                                ArrayList <Group_user_details> temp = new ArrayList<>();
                                 AttemptGetGroupInfo memberInfo = new AttemptGetGroupInfo();
                                 try {
                                     memberInfo.setTAG(TAG);
@@ -128,79 +127,26 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
                                         }
                                         previousGroupMembers= (ArrayList<Group_user_details>) groupMembers.clone();
 
-                                        for(Group_user_details member : previousGroupMembers){
-                                            Log.i(TAG, "prevGroup"+member.idUser +member.nickName+member.getMarker().getId());
-                                        }
+//                                        for(Group_user_details member : previousGroupMembers){
+//                                            Log.i(TAG, "newGroup:"+ member+":"+member.idUser +":"+member.nickName +":"+member.getMarker().getId());
+//                                        }
                                     } else {
-                                        for (Group_user_details member : groupMembers) {
-                                            Log.i(TAG, "groupMembers:" + member.nickName);
-
-                                            int index = previousGroupMembers.indexOf(member);
-                                            Log.i(TAG, "index:" + index);
-                                            if (index == -1) {//new member
-                                                member.createMarker(mMap);
-                                                previousGroupMembers= (ArrayList<Group_user_details>) groupMembers.clone();
-                                            }else{
-                                                member.setMarker(previousGroupMembers.get(index).getMarker());
-                                                member.updateMarker();
-                                                previousGroupMembers= (ArrayList<Group_user_details>) groupMembers.clone();
-                                                previousGroupMembers.get(index).getMarker().remove();
-                                            }
+                                        for (Group_user_details prevMember : previousGroupMembers){//remove previous markers
+                                            prevMember.getMarker().remove();
+                                            Log.i(TAG, "prevMember:" + prevMember.nickName);
                                         }
+                                        for (Group_user_details member : groupMembers) { //create new markers
+                                                member.createMarker(mMap);
+                                                Log.i(TAG, "newGroupMemberUpdate:" + member.nickName+":"+member.getMarker().getId());
+                                        }
+                                        previousGroupMembers= (ArrayList<Group_user_details>) groupMembers.clone();
+//                                        for(Group_user_details member : previousGroupMembers){
+//                                            Log.i(TAG, "prevGroup:"+ member+":"+member.idUser +":"+member.nickName +":"+member.getMarker().getId());
+//                                        }
                                     }
                                 } catch (InterruptedException | ExecutionException e) {
                                     e.printStackTrace();
                                 }
-
-//                                for (int i = 0; i < groupMembers.size(); i++) {
-//                                    if (groupMembers.get(i).status.equals("1")) {
-//                                        for (int j = 0; j < previousGroupMembers.size(); j++) {
-//                                            Log.i(TAG, "groupMembers:" + groupMembers.get(i).nickName);
-//                                            Log.i(TAG, "prevGroupMembers:" + previousGroupMembers.get(j).nickName);
-//                                            if (groupMembers.get(i).idUser.equals(previousGroupMembers.get(j).idUser)) {
-//
-//                                                Log.i(TAG, "prevMarker:" + previousGroupMembers.get(j).getMarker().getId());
-//
-//                                                groupMembers.get(i).setMarker(previousGroupMembers.get(j).getMarker());
-//                                                previousGroupMembers.set(j, groupMembers.get(i));
-//                                                groupMembers.get(i).updateMarker();
-//
-//                                                Log.i(TAG, "prevMarker2:" + previousGroupMembers.get(j).getMarker().getId());
-//                                                Log.i(TAG, "currentMarker2:" + groupMembers.get(i).getMarker().getId());
-//                                            }
-//
-//                                            else if (groupMembers.indexOf(previousGroupMembers.get(j))== -1) {//previousGroupMember doesn't exist in groupMembers
-//                                                previousGroupMembers.get(j).getMarker().remove();            // a member has left the group
-//                                                continue;
-//                                            } else if(previousGroupMembers.indexOf(groupMembers.get(i))==-1){//groupMember doesn't exist in previousGroupMember
-//                                                groupMembers.get(i).createMarker(mMap);                      //a new member was added to the group
-//                                                break;
-//                                            }
-//                                        }
-//                                    }
-//                                }
-
-
-//                                    markers.get(j).remove();
-//                                for(int j=0;j<markers.size();j++){
-//                                    markers.get(j).remove();
-//                                }
-//                                mMap.clear();
-
-//                                Log.i(TAG, "groupMembers:"+ Arrays.toString(groupMembers.toArray()));
-//                                for(Group_user_details member : groupMembers){
-//
-//                                    if(member.status.equals("1")) {
-////                                            Log.i(TAG, "member:"+groupMembers.get(i).toString());
-//                                        member.createMarker(mMap);
-//                                        markers.add(member.marker);
-//                                        Log.i(TAG, "marker:"+member.marker.getId());
-//                                        Log.i(TAG, "markerList:"+markers.toString());
-////                                            marker = null;
-//                                    }
-//
-//                                }
-//                                groupMembers=null;
                             }
                         });
                         Thread.sleep(5000);
@@ -211,28 +157,53 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
             }
         }.start();
     }
-//    private void updateHistoryThread() {
-//
-//        new Thread() {
-//            public void run() {
-//                while (true) {
-//                    try {
-//                        runOnUiThread(new Runnable() {
-//
-//                            @Override
-//                            public void run() {
-//                                MyLocationListener.updateMyHistory(myLocation);
-//
-//                            }
-//                        });
-//                        Thread.sleep(600000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }.start();
-//    }
+
+    private void updatePosition() {
+        new Thread() {
+            public void run() {
+                while (true) {
+                    try {
+                        if (myLocation != null) {
+                            String url = InternetConnection.host + "putPosition.php?idU=" + iD
+                                    + "&La=" + myLocation.getLatitude() + "&Lg=" + myLocation.getLongitude() + "&st=" + myStatus;
+                            InternetConnection.trustAllCertificates();
+                            HttpsURLConnection con = InternetConnection.connectInternet(url);
+                            Log.i(TAG, "URL locationListener: " + url);
+                            Log.i(TAG, "LocationListener: " + con.getResponseMessage());
+                        }
+                        Thread.sleep(3000);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
+    private void updateHistory() {
+        new Thread() {
+            public void run() {
+                while (true) {
+                    try {
+                        if (myLocation != null) {
+                            String url = InternetConnection.host + "putHistory.php?idU=" + iD + "&La=" + myLocation.getLatitude()
+                                    + "&Lg=" + myLocation.getLongitude() + "&st=" + myStatus;
+                            InternetConnection.trustAllCertificates();
+                            HttpsURLConnection con = InternetConnection.connectInternet(url);
+                            Log.i(TAG, "URL locationListenerHistory: " + url);
+                            Log.i(TAG, "LocationListenerHistory: " + con.getResponseMessage());
+                        }
+                        Thread.sleep(600000);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
 }
 
 class AttemptGetGroupInfo extends AsyncTask<Object, Object, ArrayList<Group_user_details>> {
@@ -245,7 +216,6 @@ class AttemptGetGroupInfo extends AsyncTask<Object, Object, ArrayList<Group_user
             InternetConnection.trustAllCertificates();
             String url = InternetConnection.host + "getMyGroupPosition.php?idU="+MapsActivity.iD+"&idG=" + MapsActivity.groupID;
             HttpsURLConnection con = InternetConnection.connectInternet(url);
-
             StringBuilder builderString = InternetConnection.processServerData(con);
 
             JSONObject jUsersObj = new JSONObject(String.valueOf(builderString));
@@ -260,7 +230,6 @@ class AttemptGetGroupInfo extends AsyncTask<Object, Object, ArrayList<Group_user
 
                     Group_user_details member = new Group_user_details(jObj.getString("ID_User"), jObj.getString("Nickname"), location, jObj.getString("dateTime"), jObj.getString("status"));
                     membersInfo.add(member);
-//                    Log.i(TAG, "memberA:"+member.toString());
                 }
             }
             Log.i(TAG, "MembersAsync:" + members.toString());
@@ -281,3 +250,4 @@ class AttemptGetGroupInfo extends AsyncTask<Object, Object, ArrayList<Group_user
     protected void onPreExecute() {
     }
 }
+

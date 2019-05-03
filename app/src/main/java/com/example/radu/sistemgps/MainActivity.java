@@ -102,24 +102,17 @@ public class MainActivity extends Activity implements SensorEventListener {
         t6 = new TextView(this);        //// info
         t6 = (TextView) findViewById(R.id.textView6);
 
-        ////////////////////////////////////////// verif conexiune gps
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        myLocation.setLatitude(2.0);
+        myLocation.setLongitude(2.0);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationListener mlocListener  = new MyLocationListener();
+
+        if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) { // Check if GPS is active
             Toast.makeText(this, "GPS is Enabled in your device", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "GPS is Disabled in your device", Toast.LENGTH_LONG).show();
         }
-        /////////////////////////////////////////////////////
-
-        myLocation.setLatitude(2.0);
-        myLocation.setLongitude(2.0);
-
-        runThread();/// thread pt actualizare GetPosition si PutPosition
-        updateHistoryThread();
-
-        LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        LocationListener mlocListener  = new MyLocationListener();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -133,6 +126,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, mlocListener);
 
+        runThread();/// thread to update GetPosition and PutPosition
+        updateHistoryThread();
     }
 
     protected void onResume()
@@ -240,7 +235,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
                             @Override
                             public void run() {
-                                MyLocationListener.updateMyPos(myLocation);
+                                MyLocationListener.updateMyPos(myLocation);//TODO should be useless // TO CHECK
                                 GetPos.updateHisPos(hisLocation);
                             }
                         });

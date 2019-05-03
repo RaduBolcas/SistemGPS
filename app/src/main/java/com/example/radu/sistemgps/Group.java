@@ -47,7 +47,7 @@ public class Group extends Activity {
         final Button selectGroup = (Button) findViewById(R.id.buttonSelect);
         selectGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                MapsActivity.groupID = id.getText().toString();//TODO to use this value to select the group and show the group on the map
+                MapsActivity.groupID = id.getText().toString();
                 Intent i=new Intent(Group.this, MapsActivity.class);
                 startActivity(i);
                 finish();

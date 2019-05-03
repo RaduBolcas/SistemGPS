@@ -13,7 +13,7 @@ public class Group_user_details {
     Location location = null;
     String dateTime = "";
     String status = "";
-    private Marker marker = null;
+    Marker marker = null;
 
     Group_user_details(String idUser, String nickName, Location location, String dateTime, String status ){
         this.idUser = idUser;
@@ -35,7 +35,7 @@ public class Group_user_details {
         return marker;
     }
     public void updateMarker(){
-        LatLng member = new LatLng(location.getLatitude(),location.getLongitude());
-        this.marker.setPosition(member);
+        LatLng member2 = new LatLng(location.getLatitude(),location.getLongitude());
+        marker.setPosition(member2);
     }
 }

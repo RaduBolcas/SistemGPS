@@ -21,10 +21,9 @@ public class MyLocationListener implements LocationListener {
         MainActivity.t.setText("Eu"+(float)loc.getLatitude() + "   " + (float)loc.getLongitude());
         try {
             InternetConnection.trustAllCertificates();
-            String url = InternetConnection.host +"putPosition.php?idU=" + MainActivity.iD + "&idL=" + MainActivity.iD + "&La=" + loc.getLatitude() + "&Lg=" + loc.getLongitude()+"&st="+ MainActivity.myStatus;
+            String url = InternetConnection.host +"putPosition.php?idU=" + MainActivity.iD + "&La=" + loc.getLatitude() + "&Lg=" + loc.getLongitude()+"&st="+ MainActivity.myStatus;
             Log.i("MyLocationListener", url);
             HttpsURLConnection con = InternetConnection.connectInternet(url);
-            // TODO de verificat daca toast-ul urmator functioneaza
             MainActivity.t4.setText("putPos: " + con.getResponseMessage()); ///verif cconexiunii
 
             //Toast.makeText(null, con.getResponseMessage(), Toast.LENGTH_SHORT).show();
@@ -37,11 +36,14 @@ public class MyLocationListener implements LocationListener {
 
     public static void updateMyHistory(Location loc){
         myLocation = loc;
+//        Double lat = myLocation.getLatitude(), lng = myLocation.getLongitude();
         try {
-            InternetConnection.trustAllCertificates();
-            String st = InternetConnection.host +"putHistory.php?idU=" + MainActivity.iD + "&La=" + myLocation.getLatitude() + "&Lg=" + myLocation.getLongitude()+"&st="+ MainActivity.myStatus;
-            HttpsURLConnection con = InternetConnection.connectInternet(st);
-            Log.i("MyLocationListener","putHistoryOK="+ con.getResponseMessage());
+//            if (lat!=0 && lng!=0) {//insert only corrct values
+                InternetConnection.trustAllCertificates();
+                String st = InternetConnection.host + "putHistory.php?idU=" + MainActivity.iD + "&La=" + myLocation.getLatitude() + "&Lg=" + myLocation.getLongitude() + "&st=" + MainActivity.myStatus;
+                HttpsURLConnection con = InternetConnection.connectInternet(st);
+                Log.i("MyLocationListener", "putHistoryOK=" + con.getResponseMessage());
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
