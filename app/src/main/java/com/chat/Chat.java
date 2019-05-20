@@ -54,7 +54,7 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String messageText = messageArea.getText().toString();
-                if (!Chat_users_details.chatWithGroup.equals("")) {
+                if (!Chat_users_details.chatWithGroup.equals("")) {//if a Group is selected
                     if (!messageText.equals("")) {
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("message", messageText);
@@ -62,7 +62,7 @@ public class Chat extends AppCompatActivity {
                         reference1.push().setValue(map);
                         messageArea.setText("");
                     }
-                } else {
+                } else { //message 1 on 1
                     if (!messageText.equals("")) {
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("message", messageText);

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.chat.Chat_login;
 import com.login.Logout;
+import com.meeting.MeetingsOptions;
 
 
 public class Meniu extends Activity {
@@ -45,7 +46,6 @@ public class Meniu extends Activity {
             }
         });
 
-                /*pt locatie fixaaaa*/
         final Button buttonC = (Button) findViewById(R.id.buttonC); //FL
         buttonC.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -82,12 +82,22 @@ public class Meniu extends Activity {
 
             }
         });
-        final Button buttonF = (Button) findViewById(R.id.buttonF); //Logout
+        final Button buttonF = (Button) findViewById(R.id.buttonF); //getHistory
         buttonF.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 Intent t=new Intent(Meniu.this, GetHistory.class);
                 startActivity(t);
+                finish();
+
+            }
+        });
+        final Button buttonG = (Button) findViewById(R.id.buttonG); //Meetings
+        buttonG.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent c=new Intent(Meniu.this, MeetingsOptions.class);
+                startActivity(c);
                 finish();
 
             }

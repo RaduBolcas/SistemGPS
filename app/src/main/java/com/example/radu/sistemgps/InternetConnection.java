@@ -15,7 +15,7 @@ import javax.net.ssl.X509TrustManager;
 
 public final class InternetConnection {
 
-    public static final String host = "https://192.168.1.6/";
+    public static final String host = "https://192.168.0.192/";
 
     public static HttpsURLConnection connectInternet( String url_address) {
         String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36";

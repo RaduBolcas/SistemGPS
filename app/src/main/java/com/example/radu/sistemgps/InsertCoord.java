@@ -36,6 +36,8 @@ public class InsertCoord extends Activity {
                 Toast.makeText(getApplicationContext(),"FindLoc",Toast.LENGTH_SHORT).show();
 
                 Intent m=new Intent(InsertCoord.this, FindLoc.class);
+                m.putExtra("latitude", Double.parseDouble(LocLat1));
+                m.putExtra("longitude",Double.parseDouble(LocLong1));
                 startActivity(m);
                 finish();
             }

@@ -18,7 +18,7 @@ public class MyLocationListener implements LocationListener {
         MainActivity.loc = loc;
 
         /// Own Location
-        MainActivity.t.setText("Eu"+(float)loc.getLatitude() + "   " + (float)loc.getLongitude());
+
         try {
             InternetConnection.trustAllCertificates();
             String url = InternetConnection.host +"putPosition.php?idU=" + MainActivity.iD + "&La=" + loc.getLatitude() + "&Lg=" + loc.getLongitude()+"&st="+ MainActivity.myStatus;

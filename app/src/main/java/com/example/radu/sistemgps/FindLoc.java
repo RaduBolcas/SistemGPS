@@ -47,7 +47,6 @@ public class FindLoc extends Activity implements SensorEventListener {
     public static Location locEu = new Location(""); //locEu=locatie telefonul meu
     public static Location locDest = new Location(""); //locDest=destinatiee
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,12 +88,20 @@ public class FindLoc extends Activity implements SensorEventListener {
         locEu.setLatitude(2.0);
         locEu.setLongitude(2.0);
 
-        Log.i("FindLoc:", "LocLong"+InsertCoord.LocLong1);
-        Log.i("FindLoc", "LocLat"+InsertCoord.LocLat1);
+//        Log.i("FindLoc:", "LocLong"+InsertCoord.LocLong1);
+//        Log.i("FindLoc", "LocLat"+InsertCoord.LocLat1);
 
         runThread2();/// thread
-        locDest.setLongitude(Double.parseDouble(InsertCoord.LocLong1));
-        locDest.setLatitude(Double.parseDouble(InsertCoord.LocLat1));
+        Intent i = getIntent();
+        double lat=0, lng =0;
+//        lat = i.getDoubleExtra("latitude", lat);
+//        lng = i.getDoubleExtra("longitude", lng);
+        Log.i("FindLoc:", "LatLong"+lat+"  "+lng);
+        locDest.setLatitude(i.getDoubleExtra("latitude", lat));
+        locDest.setLongitude(i.getDoubleExtra("longitude", lng));
+
+//        locDest.setLongitude(Double.parseDouble(InsertCoord.LocLong1));
+//        locDest.setLatitude(Double.parseDouble(InsertCoord.LocLat1));
         FindLoc.t2.setText("Dest "+String.valueOf(locDest.getLatitude())+"  "+String.valueOf(locDest.getLongitude()) );
         Log.i("FindLoc:", "LocDest"+locDest.getLatitude()+"  "+locDest.getLongitude());
 

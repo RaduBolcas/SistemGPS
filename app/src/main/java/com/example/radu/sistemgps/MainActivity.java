@@ -236,6 +236,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                             @Override
                             public void run() {
                                 MyLocationListener.updateMyPos(myLocation);//TODO should be useless // TO CHECK
+                                MainActivity.t.setText("Eu"+(float)loc.getLatitude() + "   " + (float)loc.getLongitude());
                                 GetPos.updateHisPos(hisLocation);
                             }
                         });
