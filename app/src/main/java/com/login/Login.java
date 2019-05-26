@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 public class Login extends Activity {
 
     private String TAG ="Login" ;
-    Button bt1, bt2, bt3;
+    Button bt1, bt2;
     EditText edt1, edt2;
     public static String pass;
     public static int serverResponse=0;
@@ -40,8 +40,7 @@ public class Login extends Activity {
         edt1 = (EditText) findViewById(R.id.editText); ///username
         edt2 = (EditText) findViewById(R.id.editText2); ///password
 
-        bt2 = (Button) findViewById(R.id.button2); //Cancel Button
-        bt3 = (Button) findViewById(R.id.button3); //Register button
+        bt2 = (Button) findViewById(R.id.button2); //Register Button
 
         txt1 = (TextView) findViewById(R.id.textView3);
         txt2 = (TextView) findViewById(R.id.textView1);
@@ -97,14 +96,7 @@ public class Login extends Activity {
             }
         });
 
-        bt2.setOnClickListener(new View.OnClickListener() { //butonul Cancel
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        bt3.setOnClickListener(new View.OnClickListener() { //butonul Register
+        bt2.setOnClickListener(new View.OnClickListener() { //butonul Register
             public void onClick(View v) { // Register
                 pass = null;
                 Intent n = new Intent(Login.this, Register.class);
@@ -116,7 +108,7 @@ public class Login extends Activity {
 
     @Override
     public void onBackPressed() {
-        //TODO sa ies din aplicatie
+        finish();
     }
 }
 

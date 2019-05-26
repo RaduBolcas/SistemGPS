@@ -55,6 +55,7 @@ public class GetMeetings extends AppCompatActivity {
             public void onClick(View v) { // FL based on meeting place
                 // Perform action on click
                 idMeeting=id.getText().toString();
+                Log.i(TAG, "idmeeting=" + idMeeting);
                 for(Meeting_details meeting :meetings){
                     if (meeting.id_Meeting.equals(idMeeting)){
                         Intent i=new Intent(GetMeetings.this, FindLoc.class);
@@ -71,6 +72,8 @@ public class GetMeetings extends AppCompatActivity {
         buttonC.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 idMeeting=id.getText().toString();
+                Log.i(TAG, "idmeeting=" + idMeeting);
+
                 AttemptDeleteMeetings deleteMeeting = new AttemptDeleteMeetings();
                 try {
                     deleteMeeting.setTAG(TAG);
@@ -154,11 +157,12 @@ class AttemptDeleteMeetings extends AsyncTask<Object, Object, Integer> {
 
     @Override
     protected Integer doInBackground(Object... urls) {
-
         try {
             InternetConnection.trustAllCertificates();
             String url = InternetConnection.host + "deleteMeeting.php?idM=" + GetMeetings.idMeeting;
             HttpsURLConnection con = InternetConnection.connectInternet(url);
+            StringBuilder builderString = InternetConnection.processServerData(con);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

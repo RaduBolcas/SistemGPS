@@ -1,5 +1,8 @@
 package com.meeting;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,22 +17,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.alarm.Alarm;
 import com.example.radu.sistemgps.InternetConnection;
 import com.example.radu.sistemgps.MainActivity;
 import com.example.radu.sistemgps.R;
 
-import java.sql.Time;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class CreateMeeting extends AppCompatActivity {
     EditText meetingName, meetingLatitude, meetingLongitude;
-    public static TextView meetingDate,meetingTime;
+    public static TextView meetingDate,meetingTime, alarm;
     private String TAG ="CreateMeeting";
-    public String date="",time="",dateTime="";
-    Context context;
+    public String date="",time="",dateTime="",dateTimeNotif="";
+    public static Context context;
+    public int meetingMinute, meetingHour;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,8 @@ public class CreateMeeting extends AppCompatActivity {
         meetingDate = (TextView) findViewById(R.id.textview1);
         meetingTime = new TextView(this);
         meetingTime = (TextView) findViewById(R.id.textview2);
+        alarm = new TextView(this);
+        alarm = (TextView) findViewById(R.id.textview3);
         context =this;
 
 
@@ -52,7 +58,16 @@ public class CreateMeeting extends AppCompatActivity {
                 String lat = meetingLatitude.getText().toString();
                 String lng = meetingLongitude.getText().toString();
                 dateTime = date+time;
-                //TODO Add Alarm and notification
+
+                NotificationManager notif=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                Notification notify=new Notification.Builder
+                        (getApplicationContext()).setContentTitle("A meeting is set").setContentText("Meeting time:"+dateTimeNotif +" "+time).
+                        setSmallIcon(R.drawable.ic_launcher).build();
+
+                notify.flags |= Notification.FLAG_AUTO_CANCEL;
+                notif.notify(0, notify);
+
+//
                 if (!dateTime.equals("")) {
                     String url = InternetConnection.host + "createMeeting.php?idU=" + MainActivity.iD + "&Ln=" + name + "&La=" + lat + "&Lg=" + lng + "&date=" + dateTime;
                     AttemptCreateMeetings createMeeting = new AttemptCreateMeetings();
@@ -84,6 +99,7 @@ public class CreateMeeting extends AppCompatActivity {
                         Log.i(TAG,"date="+datePicker.getYear()+"-"+datePicker.getMonth()+"-"+datePicker.getDayOfMonth());
                         int month = datePicker.getMonth()+1 ;
                         date = datePicker.getYear()+"-"+month+"-"+datePicker.getDayOfMonth()+"%"+datePicker.getDayOfMonth();
+                        dateTimeNotif=datePicker.getYear()+"-"+month+"-"+datePicker.getDayOfMonth();
                         meetingDate.setText("date="+datePicker.getYear()+"-"+month+"-"+datePicker.getDayOfMonth());
                     }});
                 alertDialog.setView(dialogDate);
@@ -102,8 +118,8 @@ public class CreateMeeting extends AppCompatActivity {
                     public void onClick(View view) {
 
                         TimePicker timePicker = (TimePicker) dialogTime.findViewById(R.id.time_picker);
-                        Integer minute = timePicker.getCurrentMinute();
-                        Integer hour=timePicker.getCurrentHour();
+                        meetingMinute = timePicker.getCurrentMinute();
+                        meetingHour=timePicker.getCurrentHour();
                         time = Integer.toString(timePicker.getCurrentHour())+":"+Integer.toString(timePicker.getCurrentMinute());
                         Log.i(TAG,"time="+time);
                         meetingTime.setText("time="+time);
@@ -111,6 +127,17 @@ public class CreateMeeting extends AppCompatActivity {
                     }});
                 alertDialog.setView(dialogTime);
                 alertDialog.show();
+
+            }
+        });
+        final Button buttonD = (Button) findViewById(R.id.buttonD); // SetAlarm
+        buttonD.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+            Intent m=new Intent(CreateMeeting.this, Alarm.class);
+            m.putExtra("meetingHour",meetingHour );
+            m.putExtra("meetingMinute",meetingMinute);
+            startActivity(m);
 
             }
         });

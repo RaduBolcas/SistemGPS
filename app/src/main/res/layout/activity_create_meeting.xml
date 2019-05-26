@@ -69,19 +69,39 @@
         android:layout_alignParentRight = "true"
         android:textColorHint="#78b7ac"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="datetime"
+        android:ems="10"
+        android:id="@+id/textview3"
+        android:hint="Alarm at:"
+        android:textSize="20sp"
+        android:layout_below="@+id/textview2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight = "true"
+        android:textColorHint="#78b7ac"
+        />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select Date"
         android:id="@+id/buttonB"
-        android:layout_below="@+id/textview2"
+        android:layout_below="@+id/textview3"
+        android:layout_alignParentLeft="true" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Alarm Time"
+        android:id="@+id/buttonD"
+        android:layout_below="@+id/buttonB"
         android:layout_alignParentLeft="true" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select Time"
         android:id="@+id/buttonC"
-        android:layout_below="@+id/textview2"
+        android:layout_below="@+id/textview3"
         android:layout_alignParentRight="true" />
     <Button
         android:layout_width="wrap_content"
