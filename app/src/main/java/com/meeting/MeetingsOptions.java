@@ -7,10 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.radu.sistemgps.GetID;
-import com.example.radu.sistemgps.GroupOption;
-import com.example.radu.sistemgps.InsertCoord;
-import com.example.radu.sistemgps.Meniu;
+import com.sistemGPS.Meniu;
 import com.example.radu.sistemgps.R;
 
 public class MeetingsOptions extends AppCompatActivity {

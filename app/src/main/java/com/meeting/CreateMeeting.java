@@ -2,7 +2,6 @@ package com.meeting;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -18,8 +17,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.alarm.Alarm;
-import com.example.radu.sistemgps.InternetConnection;
-import com.example.radu.sistemgps.MainActivity;
+import com.sistemGPS.InternetConnection;
+import com.sistemGPS.MainActivity;
 import com.example.radu.sistemgps.R;
 
 import java.util.concurrent.ExecutionException;

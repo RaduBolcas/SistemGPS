@@ -1,4 +1,4 @@
-package com.example.radu.sistemgps;
+package com.group;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,10 +11,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
+import com.sistemGPS.InternetConnection;
+import com.sistemGPS.MainActivity;
+import com.example.radu.sistemgps.R;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import javax.net.ssl.HttpsURLConnection;
 
@@ -73,7 +76,7 @@ class AttemptGetGroupMmbership extends AsyncTask<Object, Object, Integer> {
     protected Integer doInBackground(Object... urls) {
         try {
             InternetConnection.trustAllCertificates();
-            String url = InternetConnection.host +"getMyGroupMembership.php?idU=" +MainActivity.iD;
+            String url = InternetConnection.host +"getMyGroupMembership.php?idU=" + MainActivity.iD;
             HttpsURLConnection con =InternetConnection.connectInternet(url);
             Group.t1.setText("GetGroup:   " + con.getResponseMessage()); ///verif cconexiunii
 

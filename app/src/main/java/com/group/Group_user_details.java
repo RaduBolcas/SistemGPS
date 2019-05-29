@@ -1,4 +1,4 @@
-package com.example.radu.sistemgps;
+package com.group;
 
 import android.location.Location;
 

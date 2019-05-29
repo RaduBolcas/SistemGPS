@@ -1,4 +1,4 @@
-package com.example.radu.sistemgps;
+package com.group;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,6 +14,10 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 import javax.net.ssl.HttpsURLConnection;
+
+import com.sistemGPS.AttemptGetID;
+import com.sistemGPS.InternetConnection;
+import com.example.radu.sistemgps.R;
 
 public class AddRemoveMember extends Activity {
     int message = 0;

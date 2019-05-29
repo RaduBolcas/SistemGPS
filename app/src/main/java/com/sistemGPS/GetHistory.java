@@ -1,19 +1,17 @@
-package com.example.radu.sistemgps;
+package com.sistemGPS;
 
 import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.login.Logout;
+import com.example.radu.sistemgps.R;
+import com.group.MapsActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -64,15 +62,15 @@ public class GetHistory extends AppCompatActivity {
     }
 }
 
-class AttemptGetHistory extends AsyncTask<Object, Object, ArrayList<UserHistory>> {
+class AttemptGetHistory extends AsyncTask<Object, Object, ArrayList<History_user_details>> {
     private static String TAG ;
 
-    protected ArrayList<UserHistory> doInBackground(Object... urls) {
+    protected ArrayList<History_user_details> doInBackground(Object... urls) {
 
-        ArrayList<UserHistory> historyInfo = new ArrayList<UserHistory>();
+        ArrayList<History_user_details> historyInfo = new ArrayList<History_user_details>();
         try {
             InternetConnection.trustAllCertificates();
-            String url = InternetConnection.host + "getHistory.php?id="+MapsActivity.iD+"&tm=" + GetHistory.time;
+            String url = InternetConnection.host + "getHistory.php?id="+ MapsActivity.iD+"&tm=" + GetHistory.time;
             HttpsURLConnection con = InternetConnection.connectInternet(url);
 
             StringBuilder builderString = InternetConnection.processServerData(con);
@@ -87,7 +85,7 @@ class AttemptGetHistory extends AsyncTask<Object, Object, ArrayList<UserHistory>
                     location.setLatitude(jObj.getDouble("latitude"));
                     location.setLongitude(jObj.getDouble("longitude"));
 
-                    UserHistory history = new UserHistory(location, jObj.getString("dateTime"), jObj.getString("status"));
+                    History_user_details history = new History_user_details(location, jObj.getString("dateTime"), jObj.getString("status"));
                     historyInfo.add(history);
                 }
             }

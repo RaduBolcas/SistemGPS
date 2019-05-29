@@ -1,11 +1,10 @@
-package com.example.radu.sistemgps;
+package com.sistemGPS;
 
 import android.util.Log;
 import android.location.Location;
 import org.json.JSONObject;
 import javax.net.ssl.HttpsURLConnection;
-import static com.example.radu.sistemgps.MainActivity.myLocation;
-import static com.example.radu.sistemgps.MainActivity.hisLocation;
+
 public class GetPos {
 
     public static float bearing,distance; // x-bearing//y-distanta
@@ -14,7 +13,7 @@ public class GetPos {
 //    public static double latitude, longitude;
 
     public static void updateHisPos(Location loc){
-        myLocation = loc;
+        MainActivity.myLocation = loc;
         try {
             InternetConnection.trustAllCertificates();
             String st = InternetConnection.host +"getPosition.php?id="+ MainActivity.partneriD;
@@ -48,7 +47,7 @@ public class GetPos {
                     Log.i("UpdateHisPosition", "my coord" + MainActivity.myLocation);
                     bearing = MainActivity.myLocation.bearingTo(loc2); //salvez bearingul ce ia val intre [-180,180]grade
                     Log.i("UpdateHisPosition", "coord " + MyLocationListener.latitude + " " + MyLocationListener.longitude);
-                    Log.i("UpdateHisPosition", "his coord" + hisLocation);
+                    Log.i("UpdateHisPosition", "his coord" + MainActivity.hisLocation);
                     Log.i("UpdateHisPosition", "his coord-loc2=" + loc2);
 
                     if (bearing < 0) {

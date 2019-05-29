@@ -1,9 +1,11 @@
-package com.example.radu.sistemgps;
+package com.group;
 
 
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.sistemGPS.InternetConnection;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

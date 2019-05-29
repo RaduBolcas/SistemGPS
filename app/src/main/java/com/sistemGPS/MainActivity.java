@@ -1,4 +1,5 @@
-package com.example.radu.sistemgps;
+package com.sistemGPS;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -17,13 +18,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.radu.sistemgps.R;
 
-public class FindLoc extends Activity implements SensorEventListener {
-    public static TextView t, t1, t2, t3, t4, t5;
+
+public class MainActivity extends Activity implements SensorEventListener {
+
+    public static TextView t, t1, t2, t3, t4, t5, t6;
 
     private ImageView mPointer;
     private ImageView mPointer2;
@@ -38,23 +44,28 @@ public class FindLoc extends Activity implements SensorEventListener {
     private float[] mOrientation = new float[3];
     private float mCurrentDegree = 0f;
     private float mCurrentDegree2 = 0f;
+
     public static Location loc = null;
+    public static int myStatus=0;
+    public static String iD ;
+    public static String partneriD;
 
+    public static String name ;
+    public static float bearing = 0; ///// metoda onSensorChanged - calculul rotatiei
 
-    public static float bearingFL = 0; ///// e nevoie pt onSensorChanged pt calculul rotatiei pt cazul FL
-    public static float distanceFL;
+    public static Location hisLocation = new Location(""); //loc2=locatie telefonul partener
+    public static Location myLocation = new Location(""); //loc1=locatie telefonul meu
 
-    public static Location locEu = new Location(""); //locEu=locatie telefonul meu
-    public static Location locDest = new Location(""); //locDest=destinatiee
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_find_loc);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+
+        setContentView(R.layout.activity_main);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -62,53 +73,48 @@ public class FindLoc extends Activity implements SensorEventListener {
         mPointer2 = (ImageView) findViewById(R.id.pointer2);
 
 
-        t = new TextView(this);
+        Switch mainSwitch= (Switch) findViewById(R.id.switch1); // seteaza dinamic val status
+        mainSwitch.setChecked(false);
+        mainSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    myStatus=1;// Status is Visible
+                }else{
+                  //Status is Invisible
+                    myStatus=0;
+                }
+            }
+        });
+
+        t = new TextView(this);   ///locatia mea
         t = (TextView) findViewById(R.id.textView);
-        t1 = new TextView(this);
+        t1 = new TextView(this);        //// bearing
         t1 = (TextView) findViewById(R.id.textView1);
-        t2 = new TextView(this);
+        t2 = new TextView(this);        //// locatie partener
         t2 = (TextView) findViewById(R.id.textView2);
-        t3 = new TextView(this);
+        t3 = new TextView(this);        //// verif getPos
         t3 = (TextView) findViewById(R.id.textView3);
-        t4 = new TextView(this);
+        t4 = new TextView(this);        //// verif putPos
         t4 = (TextView) findViewById(R.id.textView4);
-        t5 = new TextView(this);
+        t5 = new TextView(this);        //// distanta
         t5 = (TextView) findViewById(R.id.textView5);
+        t6 = new TextView(this);        //// info
+        t6 = (TextView) findViewById(R.id.textView6);
 
-        ////////////////////////////////////////// verif conexiune gps
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        myLocation.setLatitude(2.0);
+        myLocation.setLongitude(2.0);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationListener mlocListener  = new MyLocationListener();
+
+        if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) { // Check if GPS is active
             Toast.makeText(this, "GPS is Enabled in your device", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "GPS is Disabled in your device", Toast.LENGTH_LONG).show();
         }
-        /////////////////////////////////////////////////////
-
-        locEu.setLatitude(2.0);
-        locEu.setLongitude(2.0);
-
-//        Log.i("FindLoc:", "LocLong"+InsertCoord.LocLong1);
-//        Log.i("FindLoc", "LocLat"+InsertCoord.LocLat1);
-
-        runThread2();/// thread
-        Intent i = getIntent();
-        double lat=0, lng =0;
-//        lat = i.getDoubleExtra("latitude", lat);
-//        lng = i.getDoubleExtra("longitude", lng);
-        Log.i("FindLoc:", "LatLong"+lat+"  "+lng);
-        locDest.setLatitude(i.getDoubleExtra("latitude", lat));
-        locDest.setLongitude(i.getDoubleExtra("longitude", lng));
-
-//        locDest.setLongitude(Double.parseDouble(InsertCoord.LocLong1));
-//        locDest.setLatitude(Double.parseDouble(InsertCoord.LocLat1));
-        FindLoc.t2.setText("Dest "+String.valueOf(locDest.getLatitude())+"  "+String.valueOf(locDest.getLongitude()) );
-        Log.i("FindLoc:", "LocDest"+locDest.getLatitude()+"  "+locDest.getLongitude());
-
-        LocationManager mlocManager = null;
-        LocationListener mlocListener;
-        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mlocListener = new MyLocationListener();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -122,39 +128,50 @@ public class FindLoc extends Activity implements SensorEventListener {
         }
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, mlocListener);
 
-
+        runThread();/// thread to update GetPosition and PutPosition
+        updateHistoryThread();
     }
 
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
         mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
         mSensorManager.unregisterListener(this, mAccelerometer);
         mSensorManager.unregisterListener(this, mMagnetometer);
     }
+
     @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor == mAccelerometer) {
+    public void onSensorChanged(SensorEvent event)
+    {
+        if (event.sensor == mAccelerometer)
+            {
             System.arraycopy(event.values, 0, mLastAccelerometer, 0, event.values.length);
             mLastAccelerometerSet = true;
-        } else if (event.sensor == mMagnetometer) {
+            }
+        else if (event.sensor == mMagnetometer)
+            {
             System.arraycopy(event.values, 0, mLastMagnetometer, 0, event.values.length);
             mLastMagnetometerSet = true;
-        }
+            }
 
-        if (mLastAccelerometerSet && mLastMagnetometerSet) {
+        if (mLastAccelerometerSet && mLastMagnetometerSet)
+        {
             SensorManager.getRotationMatrix(mR, null, mLastAccelerometer, mLastMagnetometer);
             SensorManager.getOrientation(mR, mOrientation);
             float azimuthInRadians = mOrientation[0];
-            float azimuthInDegrees = (float) (Math.toDegrees(azimuthInRadians) + 360) % 360;
+            float azimuthInDegrees = (float)(Math.toDegrees(azimuthInRadians)+360)%360; //limitează valoarea la intervalul [0,360]
 
+            Log.i("Main Activity","azimuth"+azimuthInDegrees);
 
+            //// aceasta animatie indica nordul
             RotateAnimation ra1 = new RotateAnimation(
-                    mCurrentDegree2, -azimuthInDegrees,
+                    mCurrentDegree2,-azimuthInDegrees,
                     Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF, 0.5f);
 
@@ -163,25 +180,27 @@ public class FindLoc extends Activity implements SensorEventListener {
 
             mPointer2.startAnimation(ra1);
             mCurrentDegree2 = -azimuthInDegrees;
+            ////////////////////////////////
 
-            bearingFL = locEu.bearingTo(locDest);
-            distanceFL = locEu.distanceTo(locDest);
+            bearing=GetPos.retBearing();
+            //bearing = GetPos.bearinggg(loc1, loc2); //calcul alternativ de bearing
+            MainActivity.t1.setText("bearing:"+String.valueOf(bearing));
+            Log.i("Main Activity","bearing"+bearing);
+            float heading = azimuthInDegrees - bearing; //directia de mers /// e necesar "-"  pt corectia sensului de rotire
 
-            if(bearingFL<0)
-            {bearingFL=bearingFL+360;}
-
-            t1.setText("bearing:" + String.valueOf(bearingFL) );
-
-            float heading = azimuthInDegrees - bearingFL; //directia de mers /// e necesar "-"  pt corectia sensului de rotire
-
-//            t5.setText("distanta:" + String.valueOf(distanceFL) + "m");
-            if(distanceFL<1000) {
-                    t3.setText("distanta:" + String.valueOf(distanceFL) + "m");
-            }else{t3.setText("distanta:" + String.valueOf(distanceFL/1000) + "km");}
-
-            //partea de animatie /// animatia se roteste trigonometric
+            Log.i("Main Activity","heading"+heading);
+            if(GetPos.hisStatus!=0) {
+                if (GetPos.retDistance() < 1000) {
+                    t5.setText("distanta:" + String.valueOf(GetPos.retDistance()) + "m");
+                } else {
+                    t5.setText("distanta:" + String.valueOf(GetPos.retDistance() / 1000) + "km");
+                }
+            }else{
+                t5.setText("distanta:Invisible");
+            }
+            //animatia indica direactia de parcurs /// animatia se roteste trigonometric
             RotateAnimation ra = new RotateAnimation(
-                    mCurrentDegree, -heading,
+                    mCurrentDegree,-heading,
                     Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF, 0.5f);
 
@@ -191,7 +210,6 @@ public class FindLoc extends Activity implements SensorEventListener {
             mPointer.startAnimation(ra);
             mCurrentDegree = -heading;
         }
-
     }
 
     @Override
@@ -199,8 +217,17 @@ public class FindLoc extends Activity implements SensorEventListener {
 
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        Intent a=new Intent(MainActivity.this, Meniu.class);
+        startActivity(a);
+        finish();
+        return;
+    }
 
-    private void runThread2() {
+
+    private void runThread() {
 
         new Thread() {
             public void run() {
@@ -210,11 +237,9 @@ public class FindLoc extends Activity implements SensorEventListener {
 
                             @Override
                             public void run() {
-                                locEu.setLatitude(MyLocationListener.latitude);
-                                locEu.setLongitude(MyLocationListener.longitude);
-//
-                                FindLoc.t.setText("Eu"+String.valueOf((float)locEu.getLatitude())+"  "+String.valueOf((float)locEu.getLongitude()));
-
+                                MyLocationListener.updateMyPos(myLocation);//TODO should be useless // TO CHECK
+                                MainActivity.t.setText("Eu"+(float)loc.getLatitude() + "   " + (float)loc.getLongitude());
+                                GetPos.updateHisPos(hisLocation);
                             }
                         });
                         Thread.sleep(2000);
@@ -225,14 +250,28 @@ public class FindLoc extends Activity implements SensorEventListener {
             }
         }.start();
     }
+    private void updateHistoryThread() {
 
+        new Thread() {
+            public void run() {
+                while (true) {
+                    try {
+                        runOnUiThread(new Runnable() {
 
-    @Override
-    public void onBackPressed()
-    {
-        Intent a=new Intent(FindLoc.this, Meniu.class);
-        startActivity(a);
-        finish();
-        return;
+                            @Override
+                            public void run() {
+                                MyLocationListener.updateMyHistory(myLocation);
+
+                            }
+                        });
+                        Thread.sleep(600000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
+
 }
+

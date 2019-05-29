@@ -1,4 +1,4 @@
-package com.example.radu.sistemgps;
+package com.sistemGPS;
 
 import android.Manifest;
 import android.content.Intent;
@@ -8,12 +8,11 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.example.radu.sistemgps.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 public class HistoryMapsActivity extends FragmentActivity implements GoogleMap.OnMyLocationButtonClickListener,OnMapReadyCallback {
 
     private GoogleMap mMap;
-    public static ArrayList<UserHistory> history = new ArrayList<>();
+    public static ArrayList<History_user_details> history = new ArrayList<>();
 
 
     @Override
@@ -46,7 +45,7 @@ public class HistoryMapsActivity extends FragmentActivity implements GoogleMap.O
         }
         mMap.setOnMyLocationButtonClickListener(this);
 
-        for(UserHistory loc : history){
+        for(History_user_details loc : history){
             LatLng member = new LatLng(loc.location.getLatitude(),loc.location.getLongitude());
             MarkerOptions markerOptions =new MarkerOptions().position(member).title( loc.dateTime);
             mMap.addMarker(markerOptions);

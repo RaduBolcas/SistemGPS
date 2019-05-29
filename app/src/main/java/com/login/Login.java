@@ -13,10 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.radu.sistemgps.InternetConnection;
-import com.example.radu.sistemgps.MainActivity;
-import com.example.radu.sistemgps.MapsActivity;
-import com.example.radu.sistemgps.Meniu;
+import com.sistemGPS.InternetConnection;
+import com.sistemGPS.MainActivity;
+import com.group.MapsActivity;
+import com.sistemGPS.Meniu;
 import com.example.radu.sistemgps.R;
 
 import java.util.concurrent.ExecutionException;

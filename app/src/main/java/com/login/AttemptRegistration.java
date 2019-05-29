@@ -2,7 +2,7 @@ package com.login;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import com.example.radu.sistemgps.InternetConnection;
+import com.sistemGPS.InternetConnection;
 import org.json.JSONObject;
 import java.util.Objects;
 

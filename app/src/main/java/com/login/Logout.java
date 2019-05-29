@@ -2,35 +2,18 @@ package com.login;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.radu.sistemgps.InternetConnection;
-import com.example.radu.sistemgps.MainActivity;
-import com.example.radu.sistemgps.Meniu;
+import com.sistemGPS.InternetConnection;
+import com.sistemGPS.MainActivity;
+import com.sistemGPS.Meniu;
 import com.example.radu.sistemgps.R;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public class Logout extends Activity {
 

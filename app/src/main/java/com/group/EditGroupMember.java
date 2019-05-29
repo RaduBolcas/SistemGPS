@@ -1,18 +1,19 @@
-package com.example.radu.sistemgps;
+package com.group;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.concurrent.ExecutionException;
+import com.sistemGPS.InternetConnection;
+import com.sistemGPS.MainActivity;
+import com.example.radu.sistemgps.R;
 
-import javax.net.ssl.HttpsURLConnection;
+import java.util.concurrent.ExecutionException;
 
 public class EditGroupMember extends Activity {
     public static TextView t1, t2;

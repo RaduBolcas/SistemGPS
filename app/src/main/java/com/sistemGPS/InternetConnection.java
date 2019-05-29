@@ -1,4 +1,4 @@
-package com.example.radu.sistemgps;
+package com.sistemGPS;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import javax.net.ssl.X509TrustManager;
 
 public final class InternetConnection {
 
-    public static final String host = "https://192.168.0.192/";
+    public static final String host = "https://10.2.248.65/";
 
     public static HttpsURLConnection connectInternet( String url_address) {
         String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36";

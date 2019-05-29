@@ -1,4 +1,4 @@
-package com.example.radu.sistemgps;
+package com.group;
 
 import android.Manifest;
 import android.content.Context;
@@ -14,6 +14,9 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.sistemGPS.InternetConnection;
+import com.sistemGPS.Meniu;
+import com.example.radu.sistemgps.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;

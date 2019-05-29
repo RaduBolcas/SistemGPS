@@ -11,10 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.radu.sistemgps.FindLoc;
-import com.example.radu.sistemgps.InternetConnection;
-import com.example.radu.sistemgps.MainActivity;
-import com.example.radu.sistemgps.Meniu;
+import com.sistemGPS.FindLoc;
+import com.sistemGPS.InternetConnection;
+import com.sistemGPS.MainActivity;
 import com.example.radu.sistemgps.R;
 
 import org.json.JSONArray;

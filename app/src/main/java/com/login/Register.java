@@ -9,10 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.radu.sistemgps.Group;
-import com.example.radu.sistemgps.GroupOption;
-import com.example.radu.sistemgps.InternetConnection;
-import com.example.radu.sistemgps.MainActivity;
+import com.sistemGPS.InternetConnection;
+import com.sistemGPS.MainActivity;
 import com.example.radu.sistemgps.R;
 import java.util.concurrent.ExecutionException;
 

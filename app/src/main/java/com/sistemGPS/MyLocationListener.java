@@ -1,13 +1,11 @@
-package com.example.radu.sistemgps;
+package com.sistemGPS;
 
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
-import javax.net.ssl.HttpsURLConnection;
 
-import static com.example.radu.sistemgps.MainActivity.myLocation;
+import javax.net.ssl.HttpsURLConnection;
 
 public class MyLocationListener implements LocationListener {
 
@@ -35,12 +33,12 @@ public class MyLocationListener implements LocationListener {
     }
 
     public static void updateMyHistory(Location loc){
-        myLocation = loc;
+        MainActivity.myLocation = loc;
 //        Double lat = myLocation.getLatitude(), lng = myLocation.getLongitude();
         try {
 //            if (lat!=0 && lng!=0) {//insert only corrct values
                 InternetConnection.trustAllCertificates();
-                String st = InternetConnection.host + "putHistory.php?idU=" + MainActivity.iD + "&La=" + myLocation.getLatitude() + "&Lg=" + myLocation.getLongitude() + "&st=" + MainActivity.myStatus;
+                String st = InternetConnection.host + "putHistory.php?idU=" + MainActivity.iD + "&La=" + MainActivity.myLocation.getLatitude() + "&Lg=" + MainActivity.myLocation.getLongitude() + "&st=" + MainActivity.myStatus;
                 HttpsURLConnection con = InternetConnection.connectInternet(st);
                 Log.i("MyLocationListener", "putHistoryOK=" + con.getResponseMessage());
 //            }

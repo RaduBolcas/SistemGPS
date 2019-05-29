@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.radu.sistemgps.MainActivity" >
+    tools:context="com.sistemGPS.MainActivity" >
 
 
     <TextView
@@ -36,13 +36,13 @@
          android:layout_above="@+id/textView1"
          android:layout_centerHorizontal="true"
          android:layout_marginBottom="49dp"
-         android:src="@drawable/pointer2" />
+         android:src="@drawable/pointer" />
 
      <ImageView
          android:id="@+id/pointer2"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:src="@drawable/busola3"
+         android:src="@drawable/busola"
          android:layout_marginBottom="20dp"
          android:layout_above="@+id/pointer"
          android:layout_centerHorizontal="true" />
